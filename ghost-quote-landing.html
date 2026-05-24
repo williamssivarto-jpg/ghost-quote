@@ -1,0 +1,764 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GhostQuote — Never Lose a Job to Silence Again</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,300&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --black: #080808;
+      --white: #f2efe8;
+      --orange: #ff5c00;
+      --orange-dim: rgba(255,92,0,0.15);
+      --grey: #111;
+      --grey-mid: #1c1c1c;
+      --grey-light: #999;
+      --border: rgba(255,255,255,0.08);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--black);
+      color: var(--white);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 16px;
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    /* NAV */
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 20px 40px;
+      background: rgba(8,8,8,0.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .nav-logo {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 28px;
+      letter-spacing: 2px;
+      color: var(--white);
+    }
+
+    .nav-logo span { color: var(--orange); }
+
+    .nav-cta {
+      background: var(--orange);
+      color: var(--white);
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 16px;
+      letter-spacing: 1.5px;
+      padding: 10px 24px;
+      border: none;
+      cursor: pointer;
+      text-decoration: none;
+      transition: background 0.2s;
+    }
+
+    .nav-cta:hover { background: #cc4900; }
+
+    /* HERO */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 120px 40px 80px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: 
+        radial-gradient(ellipse 80% 50% at 50% 0%, rgba(255,92,0,0.08) 0%, transparent 70%),
+        repeating-linear-gradient(0deg, transparent, transparent 60px, rgba(255,255,255,0.02) 60px, rgba(255,255,255,0.02) 61px),
+        repeating-linear-gradient(90deg, transparent, transparent 60px, rgba(255,255,255,0.02) 60px, rgba(255,255,255,0.02) 61px);
+      pointer-events: none;
+    }
+
+    .hero-label {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--orange);
+      border: 1px solid rgba(255,92,0,0.4);
+      padding: 6px 16px;
+      margin-bottom: 32px;
+      animation: fadeUp 0.6s ease both;
+    }
+
+    .hero h1 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(56px, 10vw, 120px);
+      line-height: 0.9;
+      letter-spacing: 2px;
+      margin-bottom: 32px;
+      animation: fadeUp 0.6s 0.1s ease both;
+    }
+
+    .hero h1 em {
+      font-style: normal;
+      color: var(--orange);
+      display: block;
+    }
+
+    .hero-sub {
+      font-size: clamp(16px, 2vw, 20px);
+      font-weight: 300;
+      color: var(--grey-light);
+      max-width: 560px;
+      margin: 0 auto 48px;
+      animation: fadeUp 0.6s 0.2s ease both;
+    }
+
+    .hero-sub strong {
+      color: var(--white);
+      font-weight: 500;
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+      justify-content: center;
+      animation: fadeUp 0.6s 0.3s ease both;
+    }
+
+    .btn-primary {
+      background: var(--orange);
+      color: var(--white);
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 20px;
+      letter-spacing: 2px;
+      padding: 16px 40px;
+      border: none;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-block;
+      transition: background 0.2s, transform 0.1s;
+    }
+
+    .btn-primary:hover { background: #cc4900; transform: translateY(-1px); }
+
+    .btn-secondary {
+      background: transparent;
+      color: var(--grey-light);
+      font-size: 14px;
+      font-weight: 400;
+      padding: 16px 24px;
+      border: 1px solid var(--border);
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: color 0.2s, border-color 0.2s;
+    }
+
+    .btn-secondary:hover { color: var(--white); border-color: rgba(255,255,255,0.2); }
+
+    .hero-note {
+      margin-top: 20px;
+      font-size: 13px;
+      color: #555;
+      animation: fadeUp 0.6s 0.4s ease both;
+    }
+
+    /* STATS BAR */
+    .stats-bar {
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      text-align: center;
+    }
+
+    .stat {
+      padding: 40px 20px;
+      border-right: 1px solid var(--border);
+    }
+
+    .stat:last-child { border-right: none; }
+
+    .stat-number {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 52px;
+      color: var(--orange);
+      line-height: 1;
+      display: block;
+    }
+
+    .stat-label {
+      font-size: 13px;
+      color: var(--grey-light);
+      font-weight: 300;
+      margin-top: 4px;
+    }
+
+    /* PROBLEM */
+    .section {
+      padding: 100px 40px;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .section-tag {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--orange);
+      margin-bottom: 20px;
+      display: block;
+    }
+
+    .section h2 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(36px, 5vw, 64px);
+      line-height: 1;
+      letter-spacing: 1px;
+      margin-bottom: 24px;
+    }
+
+    .problem-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+      margin-top: 60px;
+    }
+
+    .problem-card {
+      background: var(--grey);
+      padding: 40px;
+    }
+
+    .problem-icon {
+      font-size: 32px;
+      margin-bottom: 16px;
+      display: block;
+    }
+
+    .problem-card h3 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 22px;
+      letter-spacing: 1px;
+      margin-bottom: 8px;
+      color: var(--white);
+    }
+
+    .problem-card p {
+      font-size: 14px;
+      color: var(--grey-light);
+      line-height: 1.6;
+      font-weight: 300;
+    }
+
+    /* HOW IT WORKS */
+    .how-section {
+      background: var(--grey);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .steps {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 0;
+      margin-top: 60px;
+    }
+
+    .step {
+      padding: 48px 40px;
+      border-right: 1px solid var(--border);
+      position: relative;
+    }
+
+    .step:last-child { border-right: none; }
+
+    .step-number {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 80px;
+      color: rgba(255,92,0,0.15);
+      line-height: 1;
+      position: absolute;
+      top: 24px;
+      right: 24px;
+    }
+
+    .step h3 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 24px;
+      letter-spacing: 1px;
+      margin-bottom: 12px;
+      color: var(--white);
+    }
+
+    .step p {
+      font-size: 14px;
+      color: var(--grey-light);
+      font-weight: 300;
+      line-height: 1.6;
+    }
+
+    .step-dot {
+      width: 10px;
+      height: 10px;
+      background: var(--orange);
+      border-radius: 50%;
+      margin-bottom: 24px;
+    }
+
+    /* TIMELINE */
+    .timeline {
+      margin-top: 60px;
+      border: 1px solid var(--border);
+      overflow: hidden;
+    }
+
+    .timeline-row {
+      display: flex;
+      align-items: center;
+      border-bottom: 1px solid var(--border);
+      padding: 20px 32px;
+      gap: 24px;
+    }
+
+    .timeline-row:last-child { border-bottom: none; }
+
+    .timeline-day {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 20px;
+      color: var(--orange);
+      min-width: 60px;
+      letter-spacing: 1px;
+    }
+
+    .timeline-action {
+      font-size: 14px;
+      color: var(--white);
+      font-weight: 400;
+    }
+
+    .timeline-note {
+      font-size: 13px;
+      color: var(--grey-light);
+      font-weight: 300;
+      margin-left: auto;
+      text-align: right;
+    }
+
+    /* PRICING */
+    .pricing-card {
+      background: var(--grey-mid);
+      border: 1px solid var(--border);
+      max-width: 480px;
+      margin: 60px auto 0;
+      padding: 48px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .pricing-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+      background: var(--orange);
+    }
+
+    .pricing-badge {
+      display: inline-block;
+      background: var(--orange-dim);
+      border: 1px solid rgba(255,92,0,0.3);
+      color: var(--orange);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      padding: 4px 12px;
+      margin-bottom: 24px;
+    }
+
+    .pricing-price {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 72px;
+      line-height: 1;
+      color: var(--white);
+      letter-spacing: 1px;
+    }
+
+    .pricing-price sup {
+      font-size: 32px;
+      vertical-align: top;
+      margin-top: 12px;
+      display: inline-block;
+    }
+
+    .pricing-period {
+      font-size: 14px;
+      color: var(--grey-light);
+      margin-bottom: 8px;
+      font-weight: 300;
+    }
+
+    .pricing-rrp {
+      font-size: 13px;
+      color: #555;
+      margin-bottom: 32px;
+    }
+
+    .pricing-rrp span {
+      text-decoration: line-through;
+    }
+
+    .pricing-features {
+      list-style: none;
+      margin-bottom: 36px;
+    }
+
+    .pricing-features li {
+      font-size: 14px;
+      color: var(--grey-light);
+      padding: 10px 0;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-weight: 300;
+    }
+
+    .pricing-features li::before {
+      content: '✓';
+      color: var(--orange);
+      font-weight: 600;
+      flex-shrink: 0;
+    }
+
+    .pricing-features li:last-child { border-bottom: none; }
+
+    .pricing-cta {
+      width: 100%;
+      background: var(--orange);
+      color: var(--white);
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 22px;
+      letter-spacing: 2px;
+      padding: 18px;
+      border: none;
+      cursor: pointer;
+      text-decoration: none;
+      display: block;
+      text-align: center;
+      transition: background 0.2s;
+    }
+
+    .pricing-cta:hover { background: #cc4900; }
+
+    .pricing-guarantee {
+      text-align: center;
+      font-size: 13px;
+      color: #555;
+      margin-top: 16px;
+      font-weight: 300;
+    }
+
+    /* TESTIMONIAL */
+    .testimonial-section {
+      background: var(--grey);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .testimonial {
+      max-width: 700px;
+      margin: 0 auto;
+      text-align: center;
+      padding: 80px 40px;
+    }
+
+    .testimonial blockquote {
+      font-family: 'DM Sans', sans-serif;
+      font-size: clamp(20px, 3vw, 28px);
+      font-weight: 300;
+      font-style: italic;
+      line-height: 1.4;
+      color: var(--white);
+      margin-bottom: 32px;
+    }
+
+    .testimonial cite {
+      font-size: 13px;
+      color: var(--grey-light);
+      font-style: normal;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+
+    /* CTA SECTION */
+    .cta-section {
+      text-align: center;
+      padding: 100px 40px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .cta-section::before {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      height: 400px;
+      background: radial-gradient(ellipse 60% 100% at 50% 100%, rgba(255,92,0,0.06) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .cta-section h2 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(40px, 7vw, 80px);
+      line-height: 1;
+      letter-spacing: 2px;
+      margin-bottom: 20px;
+    }
+
+    .cta-section p {
+      font-size: 16px;
+      color: var(--grey-light);
+      font-weight: 300;
+      margin-bottom: 40px;
+      max-width: 480px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    /* FOOTER */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 32px 40px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+
+    .footer-logo {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 22px;
+      letter-spacing: 2px;
+    }
+
+    .footer-logo span { color: var(--orange); }
+
+    footer p {
+      font-size: 13px;
+      color: #444;
+      font-weight: 300;
+    }
+
+    /* ANIMATIONS */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* RESPONSIVE */
+    @media (max-width: 768px) {
+      nav { padding: 16px 20px; }
+      .section { padding: 60px 20px; }
+      .stats-bar { grid-template-columns: 1fr; }
+      .stat { border-right: none; border-bottom: 1px solid var(--border); }
+      .stat:last-child { border-bottom: none; }
+      .step { border-right: none; border-bottom: 1px solid var(--border); }
+      .step:last-child { border-bottom: none; }
+      .timeline-row { flex-direction: column; align-items: flex-start; gap: 4px; }
+      .timeline-note { margin-left: 0; text-align: left; }
+      footer { flex-direction: column; text-align: center; }
+      .hero-actions { flex-direction: column; align-items: center; }
+      .pricing-card { padding: 32px 24px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <div class="nav-logo">Ghost<span>Quote</span></div>
+    <a href="https://williamssivarto-jpg.github.io/ghost-quote" class="nav-cta">Start Free Trial</a>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-label">Built for UK Tradesmen</div>
+    <h1>Stop Losing Jobs<br><em>To Silence</em></h1>
+    <p class="hero-sub">You send a quote. They go quiet. You forget to chase. <strong>The job goes to someone else.</strong> GhostQuote follows up automatically — so you never lose work to an unanswered email again.</p>
+    <div class="hero-actions">
+      <a href="https://williamssivarto-jpg.github.io/ghost-quote" class="btn-primary">Start Free — 14 Days</a>
+      <a href="#how-it-works" class="btn-secondary">↓ See How It Works</a>
+    </div>
+    <p class="hero-note">No card required. Cancel anytime. Takes 2 minutes to set up.</p>
+  </section>
+
+  <!-- STATS -->
+  <div class="stats-bar">
+    <div class="stat">
+      <span class="stat-number">£78K</span>
+      <div class="stat-label">Average annual revenue lost by UK tradesmen from missed follow-ups</div>
+    </div>
+    <div class="stat">
+      <span class="stat-number">7</span>
+      <div class="stat-label">Days GhostQuote chases your dead quotes automatically</div>
+    </div>
+    <div class="stat">
+      <span class="stat-number">£29</span>
+      <div class="stat-label">Per month. Less than a tank of fuel. Pays for itself with one recovered job</div>
+    </div>
+  </div>
+
+  <!-- PROBLEM -->
+  <section class="section">
+    <span class="section-tag">The Problem</span>
+    <h2>Most Tradesmen Are<br>Terrible at Admin</h2>
+    <p style="color: var(--grey-light); font-weight: 300; max-width: 560px;">That's not an insult — it's a fact. You're brilliant at the job. The paperwork is another story. And it's costing you thousands every year.</p>
+
+    <div class="problem-grid">
+      <div class="problem-card">
+        <span class="problem-icon">📱</span>
+        <h3>You Forget to Follow Up</h3>
+        <p>You send a quote, get busy on site, and three weeks later remember you never chased it. By then they've hired someone else.</p>
+      </div>
+      <div class="problem-card">
+        <span class="problem-icon">⏱</span>
+        <h3>You Reply Too Slowly</h3>
+        <p>The first tradesman to follow up usually gets the job. If you're not first, you're often nowhere.</p>
+      </div>
+      <div class="problem-card">
+        <span class="problem-icon">💸</span>
+        <h3>You Leave Money on the Table</h3>
+        <p>UK tradesmen lose an average of £78,000 a year in work they quoted for but never converted. That's not lost jobs — that's lost income.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- HOW IT WORKS -->
+  <section class="how-section" id="how-it-works">
+    <div class="section">
+      <span class="section-tag">How It Works</span>
+      <h2>Three Steps.<br>Zero Effort.</h2>
+      <p style="color: var(--grey-light); font-weight: 300; max-width: 560px;">You do the quote. GhostQuote does the chasing. It's that simple.</p>
+
+      <div class="steps">
+        <div class="step">
+          <div class="step-number">01</div>
+          <div class="step-dot"></div>
+          <h3>Add the Quote</h3>
+          <p>Enter the customer's name, email, and job type. Takes 30 seconds. GhostQuote takes it from there.</p>
+        </div>
+        <div class="step">
+          <div class="step-number">02</div>
+          <div class="step-dot"></div>
+          <h3>We Chase for You</h3>
+          <p>GhostQuote sends warm, professional follow-up emails on Day 3 and Day 7 — written by AI, personalised to the job, signed off in your name.</p>
+        </div>
+        <div class="step">
+          <div class="step-number">03</div>
+          <div class="step-dot"></div>
+          <h3>You Get the Alert</h3>
+          <p>When the customer replies, you get an instant notification. Strike while the lead is hot. Close the job.</p>
+        </div>
+      </div>
+
+      <div class="timeline">
+        <div class="timeline-row">
+          <div class="timeline-day">Day 0</div>
+          <div class="timeline-action">You add the quote — GhostQuote starts watching</div>
+          <div class="timeline-note">Immediate</div>
+        </div>
+        <div class="timeline-row">
+          <div class="timeline-day">Day 3</div>
+          <div class="timeline-action">"Hi Sarah, just checking you got Dave's quote for the bathroom refit..."</div>
+          <div class="timeline-note">Automatic</div>
+        </div>
+        <div class="timeline-row">
+          <div class="timeline-day">Day 7</div>
+          <div class="timeline-action">Final chase — warm, no pressure, leaves the door open</div>
+          <div class="timeline-note">Automatic</div>
+        </div>
+        <div class="timeline-row">
+          <div class="timeline-day">Reply</div>
+          <div class="timeline-action">Customer responds — you get an instant alert to your phone</div>
+          <div class="timeline-note">Instant alert</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PRICING -->
+  <section class="section" style="text-align: center;">
+    <span class="section-tag">Pricing</span>
+    <h2>One Price.<br>No Surprises.</h2>
+    <p style="color: var(--grey-light); font-weight: 300; max-width: 480px; margin: 0 auto;">No setup fees. No long contracts. Cancel any time. One recovered job pays for six months.</p>
+
+    <div class="pricing-card">
+      <div class="pricing-badge">Early Adopter Price</div>
+      <div class="pricing-price"><sup>£</sup>19</div>
+      <div class="pricing-period">per month — locked in forever</div>
+      <div class="pricing-rrp">Standard price <span>£29/month</span> — save £10/month by joining now</div>
+      <ul class="pricing-features">
+        <li>Unlimited quotes in the system</li>
+        <li>AI-written follow-up emails in your name</li>
+        <li>Automatic Day 3 and Day 7 chase sequence</li>
+        <li>Instant reply alert to your phone</li>
+        <li>Lead tracking dashboard</li>
+        <li>14-day free trial — no card required</li>
+      </ul>
+      <a href="https://williamssivarto-jpg.github.io/ghost-quote" class="pricing-cta">Start Free Trial</a>
+      <p class="pricing-guarantee">14 days free. No card. Cancel any time.</p>
+    </div>
+  </section>
+
+  <!-- TESTIMONIAL -->
+  <div class="testimonial-section">
+    <div class="testimonial">
+      <blockquote>"I recovered three jobs in the first month. That's about £4,000 I would have just left on the table."</blockquote>
+      <cite>Dave S. — Plumber, West Midlands</cite>
+    </div>
+  </div>
+
+  <!-- CTA -->
+  <section class="cta-section">
+    <h2>Your Next Job<br>Is Already Waiting</h2>
+    <p>Someone you quoted is sitting on your email right now. GhostQuote will chase them today.</p>
+    <a href="https://williamssivarto-jpg.github.io/ghost-quote" class="btn-primary">Start Free — No Card Required</a>
+    <p style="margin-top: 16px; font-size: 13px; color: #444;">Takes 2 minutes. Works immediately.</p>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-logo">Ghost<span>Quote</span></div>
+    <p>Built for UK tradesmen. Automated follow-ups. Recovered jobs. Zero effort.</p>
+    <p>© 2026 GhostQuote</p>
+  </footer>
+
+</body>
+</html>
