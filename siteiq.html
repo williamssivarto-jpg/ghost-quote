@@ -235,16 +235,49 @@
     }
 
     /* ============ QUICK PROMPTS ============ */
+    .quick-wrap {
+      position: relative;
+      flex-shrink: 0;
+    }
+    .quick-wrap::after {
+      content: "";
+      position: absolute;
+      top: 0; right: 0; bottom: 0;
+      width: 52px;
+      pointer-events: none;
+      background: linear-gradient(to right, rgba(7,13,26,0), rgba(7,13,26,0.96));
+      z-index: 2;
+    }
+    .swipe-hint {
+      position: absolute;
+      top: 50%; right: 12px;
+      transform: translateY(-50%);
+      z-index: 3;
+      color: var(--cyan);
+      font-size: 22px;
+      font-weight: 700;
+      pointer-events: none;
+      text-shadow: 0 0 10px var(--cyan-glow);
+      animation: swipeNudge 1.4s ease-in-out infinite;
+    }
+    @keyframes swipeNudge {
+      0%,100% { transform: translateY(-50%) translateX(0); opacity: 0.45; }
+      50% { transform: translateY(-50%) translateX(5px); opacity: 1; }
+    }
     .quick-prompts {
       padding: 11px 12px;
       display: flex;
-      flex-wrap: wrap;
       gap: 7px;
-      flex-shrink: 0;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
       background: rgba(7,13,26,0.5);
       border-bottom: 1px solid var(--line-soft);
+      scrollbar-width: thin;
+      scrollbar-color: var(--cyan-dim) transparent;
     }
-    .quick-prompts::-webkit-scrollbar { display: none; }
+    .quick-prompts::-webkit-scrollbar { height: 4px; }
+    .quick-prompts::-webkit-scrollbar-thumb { background: var(--cyan-dim); border-radius: 2px; }
+    .quick-prompts::-webkit-scrollbar-track { background: transparent; }
 
     .quick-btn {
       position: relative;
@@ -374,6 +407,16 @@
       box-shadow: 0 4px 20px rgba(0,0,0,0.35);
     }
     .msg-ai-bubble strong { color: var(--cyan); font-weight: 600; }
+    .msg-ai-bubble .msg-ai-title {
+      display: block;
+      font-family: 'Chakra Petch', sans-serif;
+      font-weight: 700;
+      color: var(--cyan);
+      font-size: 14px;
+      letter-spacing: 0.5px;
+      margin: 2px 0 6px;
+      text-shadow: 0 0 10px rgba(34,224,255,0.25);
+    }
     .msg-ai-bubble ol, .msg-ai-bubble ul { margin-left: 18px; margin-top: 8px; }
     .msg-ai-bubble li { margin-bottom: 5px; }
 
@@ -491,7 +534,7 @@
     textarea::placeholder { color: var(--muted); }
 
     .send-btn {
-      width: 42px; height: 42px;
+      width: 46px; height: 46px;
       background: var(--cyan);
       border: none;
       border-radius: 50%;
@@ -506,7 +549,7 @@
     .send-btn:hover { background: var(--cyan-bright); box-shadow: 0 0 22px rgba(34,224,255,0.6); }
     .send-btn:disabled { background: rgba(120,150,170,0.25); box-shadow: none; cursor: not-allowed; }
     .send-btn svg {
-      width: 16px; height: 16px;
+      width: 18px; height: 18px;
       stroke: var(--bg-deep);
       fill: none;
       stroke-width: 2.5;
@@ -517,9 +560,9 @@
 
     /* MIC BUTTON */
     .mic-btn {
-      width: 42px; height: 42px;
-      background: rgba(5,10,20,0.7);
-      border: 1px solid var(--line);
+      width: 46px; height: 46px;
+      background: rgba(34,224,255,0.07);
+      border: 1px solid var(--cyan-dim);
       border-radius: 50%;
       cursor: pointer;
       display: flex;
@@ -527,15 +570,21 @@
       justify-content: center;
       transition: all 0.15s;
       flex-shrink: 0;
+      box-shadow: 0 0 12px rgba(34,224,255,0.20);
     }
-    .mic-btn:hover { border-color: var(--cyan); box-shadow: 0 0 14px rgba(34,224,255,0.3); }
+    .mic-btn:hover { border-color: var(--cyan); box-shadow: 0 0 18px rgba(34,224,255,0.4); }
     .mic-btn.listening {
       background: var(--red-soft);
       border-color: var(--red);
+      box-shadow: none;
       animation: mic-pulse 1s infinite;
     }
-    .mic-btn svg { width: 16px; height: 16px; fill: var(--text-soft); }
-    .mic-btn.listening svg { fill: var(--red); }
+    .mic-btn svg {
+      width: 19px; height: 19px;
+      fill: var(--cyan-bright);
+      filter: drop-shadow(0 0 4px var(--cyan-glow));
+    }
+    .mic-btn.listening svg { fill: var(--red); filter: none; }
     @keyframes mic-pulse {
       0%,100% { box-shadow: 0 0 0 0 rgba(255,77,87,0.35); }
       50% { box-shadow: 0 0 0 8px rgba(255,77,87,0); }
@@ -687,6 +736,11 @@
       .app { border-left: none; border-right: none; }
       .corner { display: none; }
     }
+    @media (min-width: 561px) {
+      .quick-prompts { flex-wrap: wrap; overflow-x: visible; }
+      .quick-wrap::after { display: none; }
+      .swipe-hint { display: none; }
+    }
   </style>
 </head>
 <body>
@@ -758,15 +812,18 @@
   </div>
 
   <!-- QUICK PROMPTS -->
-  <div class="quick-prompts">
-    <button class="quick-btn alarm" onclick="sendQuick('What do I do if the fire alarm activates?')">Fire Alarm</button>
-    <button class="quick-btn" onclick="sendQuick('A staff member has forgotten their pass. What is the procedure?')">Forgotten Pass</button>
-    <button class="quick-btn alarm" onclick="sendQuick('The intruder alarm has activated on night shift. What do I do?')">Intruder Alarm</button>
-    <button class="quick-btn" onclick="sendQuick('How do I issue a visitor pass?')">Visitor Pass</button>
-    <button class="quick-btn" onclick="sendQuick('A delivery has arrived. What is the procedure?')">Delivery</button>
-    <button class="quick-btn" onclick="sendQuick('Who are the keyholders and what are their contact numbers?')">Keyholders</button>
-    <button class="quick-btn" onclick="sendQuick('What are my opening procedures at 07:00?')">Opening Up</button>
-    <button class="quick-btn alarm" onclick="sendQuick('What is the bomb threat procedure?')">Bomb Threat</button>
+  <div class="quick-wrap">
+    <div class="quick-prompts">
+      <button class="quick-btn alarm" onclick="sendQuick('What do I do if the fire alarm activates?')">Fire Alarm</button>
+      <button class="quick-btn" onclick="sendQuick('A staff member has forgotten their pass. What is the procedure?')">Forgotten Pass</button>
+      <button class="quick-btn alarm" onclick="sendQuick('The intruder alarm has activated on night shift. What do I do?')">Intruder Alarm</button>
+      <button class="quick-btn" onclick="sendQuick('How do I issue a visitor pass?')">Visitor Pass</button>
+      <button class="quick-btn" onclick="sendQuick('A delivery has arrived. What is the procedure?')">Delivery</button>
+      <button class="quick-btn" onclick="sendQuick('Who are the keyholders and what are their contact numbers?')">Keyholders</button>
+      <button class="quick-btn" onclick="sendQuick('What are my opening procedures at 07:00?')">Opening Up</button>
+      <button class="quick-btn alarm" onclick="sendQuick('What is the bomb threat procedure?')">Bomb Threat</button>
+    </div>
+    <span class="swipe-hint">›</span>
   </div>
 
   <!-- MESSAGES -->
@@ -1272,6 +1329,7 @@ function removeTyping() {
 
 function formatResponse(text) {
   text = text.replace(/\b(0\d{3,4}[\s-]?\d{3,4}[\s-]?\d{3,4})\b/g, '<span class="phone-number">$1</span>');
+  text = text.replace(/^#{1,6}\s*(.+?)\s*$/gm, '<span class="msg-ai-title">$1</span>');
   text = text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
   text = text.replace(/\n/g, '<br>');
   return text;
@@ -1355,6 +1413,8 @@ function speakResponse(text) {
   // Clean the text for speech
   const clean = text
     .replace(/\*\*(.*?)\*\*/g, '$1')
+    .replace(/^#{1,6}\s*/gm, '')
+    .replace(/[#*_`>]/g, '')
     .replace(/\n+/g, '. ')
     .replace(/\d+\.\s/g, '. ')
     .replace(/\s+/g, ' ')
