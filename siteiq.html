@@ -739,6 +739,159 @@
       75% { transform: translateX(8px); }
     }
 
+    /* ============ MODE TABS + TOOLBOX TALKS ============ */
+    .mode-tabs {
+      display: flex;
+      flex-shrink: 0;
+      background: rgba(7,13,26,0.6);
+      border-bottom: 1px solid var(--line);
+    }
+    .mode-tab {
+      flex: 1;
+      background: transparent;
+      border: none;
+      border-bottom: 2px solid transparent;
+      color: var(--text-soft);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      padding: 11px 6px;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .mode-tab:hover { color: var(--cyan-bright); }
+    .mode-tab.active {
+      color: var(--cyan);
+      border-bottom-color: var(--cyan);
+      background: rgba(34,224,255,0.06);
+      box-shadow: 0 0 12px rgba(34,224,255,0.12) inset;
+    }
+
+    .mode-pane { flex: 1; min-height: 0; }
+    #procMode { display: flex; flex-direction: column; }
+    #talkMode { overflow-y: auto; padding: 14px; }
+    #talkMode::-webkit-scrollbar { width: 4px; }
+    #talkMode::-webkit-scrollbar-thumb { background: var(--line); border-radius: 2px; }
+
+    .talk-disclaimer {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      color: var(--muted);
+      letter-spacing: 0.5px;
+      line-height: 1.5;
+      padding: 4px 4px 12px;
+      text-align: center;
+    }
+
+    .talk-card {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      width: 100%;
+      text-align: left;
+      background: rgba(13,22,38,0.7);
+      border: 1px solid var(--line);
+      border-left: 3px solid var(--cyan-dim);
+      border-radius: 8px;
+      padding: 13px 14px;
+      margin-bottom: 10px;
+      cursor: pointer;
+      transition: all 0.15s;
+      color: var(--text);
+    }
+    .talk-card:hover {
+      border-color: var(--cyan);
+      box-shadow: 0 0 16px rgba(34,224,255,0.18);
+    }
+    .talk-card-main { flex: 1; min-width: 0; }
+    .talk-card-title {
+      font-family: 'Chakra Petch', sans-serif;
+      font-weight: 700;
+      font-size: 15px;
+      color: var(--text);
+      margin-bottom: 2px;
+    }
+    .talk-card-sub { font-size: 12px; color: var(--text-soft); }
+    .talk-tag {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 8.5px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      padding: 3px 7px;
+      border-radius: 3px;
+      white-space: nowrap;
+    }
+    .talk-tag.ct { color: var(--cyan); background: rgba(34,224,255,0.12); border: 1px solid rgba(34,224,255,0.4); }
+    .talk-tag.hs { color: var(--green); background: rgba(52,227,164,0.12); border: 1px solid rgba(52,227,164,0.4); }
+    .talk-card-arrow { color: var(--cyan); font-size: 20px; font-weight: 700; flex-shrink: 0; }
+
+    .talk-back {
+      background: transparent;
+      border: 1px solid var(--line);
+      color: var(--cyan);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 0.5px;
+      padding: 6px 12px;
+      border-radius: 6px;
+      cursor: pointer;
+      margin-bottom: 14px;
+      transition: all 0.15s;
+    }
+    .talk-back:hover { border-color: var(--cyan); box-shadow: 0 0 12px rgba(34,224,255,0.2); }
+
+    .talk-detail-head {
+      font-family: 'Chakra Petch', sans-serif;
+      font-weight: 700;
+      font-size: 20px;
+      color: var(--text);
+      letter-spacing: 0.3px;
+    }
+    .talk-detail-sub {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      color: var(--cyan);
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      margin: 3px 0 16px;
+    }
+
+    .talk-body { font-size: 14px; line-height: 1.6; color: var(--text); }
+    .talk-body p { margin-bottom: 11px; color: var(--text-soft); }
+    .talk-body h4 {
+      font-family: 'Chakra Petch', sans-serif;
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--cyan);
+      margin: 14px 0 7px;
+      letter-spacing: 0.3px;
+    }
+    .talk-body ul { list-style: none; margin: 0 0 11px; padding: 0; }
+    .talk-body li { position: relative; padding-left: 18px; margin-bottom: 7px; color: var(--text); }
+    .talk-body li::before { content: "▸"; position: absolute; left: 0; color: var(--cyan-dim); }
+    .talk-body strong { color: var(--text); font-weight: 700; }
+    .talk-body .bl {
+      background: rgba(34,224,255,0.08);
+      border-left: 3px solid var(--cyan);
+      border-radius: 0 6px 6px 0;
+      padding: 11px 13px;
+      margin: 16px 0 12px;
+      font-weight: 600;
+      color: var(--cyan-bright);
+    }
+    .talk-body .src {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      color: var(--muted);
+      letter-spacing: 0.3px;
+      border-top: 1px solid var(--line-soft);
+      padding-top: 10px;
+      margin-top: 4px;
+    }
+
     @media (max-width: 560px) {
       .app { border-left: none; border-right: none; }
       .corner { display: none; }
@@ -818,6 +971,15 @@
     </div>
   </div>
 
+  <!-- MODE TABS -->
+  <div class="mode-tabs">
+    <button id="tabProc" class="mode-tab active" onclick="setMode('proc')">Site Procedures</button>
+    <button id="tabTalk" class="mode-tab" onclick="setMode('talk')">Toolbox Talks</button>
+  </div>
+
+  <!-- SITE PROCEDURES MODE (existing chat) -->
+  <div id="procMode" class="mode-pane">
+
   <!-- QUICK PROMPTS -->
   <div class="quick-wrap">
     <div class="quick-prompts">
@@ -863,6 +1025,14 @@
     <button class="send-btn" id="sendBtn" onclick="sendMessage()">
       <svg viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
     </button>
+  </div>
+  </div><!-- end #procMode -->
+
+  <!-- TOOLBOX TALKS MODE -->
+  <div id="talkMode" class="mode-pane" style="display:none;">
+    <div class="talk-disclaimer">Reinforces official training &amp; site procedures — not a replacement. Read-only refresher.</div>
+    <div id="talkList"></div>
+    <div id="talkDetail" style="display:none;"></div>
   </div>
 
   <div class="footer-note">RESTRICTED — AUTHORISED SECURITY PERSONNEL ONLY — SiteIQ Security Ltd</div>
@@ -1529,6 +1699,208 @@ function stopListening() {
   if (recognition) {
     try { recognition.stop(); } catch(e) {}
   }
+}
+</script>
+
+<!-- ================================================================
+     TOOLBOX TALKS (read-only, built-in — reinforces, never replaces)
+     ================================================================ -->
+<script>
+var TALKS = [
+  { cat:'CT', title:'Suspicious &amp; Unattended Items', sub:'HOT &amp; the 4Cs', html:
+`<p>Unattended items turn up all the time and most are harmless. <strong>HOT</strong> helps you judge whether one is a genuine concern; if it is, the <strong>4Cs</strong> tell you what to do.</p>
+<h4>Is it a concern? Think HOT</h4>
+<ul>
+<li><strong>Hidden</strong> — deliberately concealed or placed out of sight?</li>
+<li><strong>Obviously suspicious</strong> — visible wires, batteries, tape, liquids or putty-like substances? Does it look an immediate threat to life?</li>
+<li><strong>Typical</strong> — is it what you'd normally expect here? (A bag by a desk is typical; a holdall behind a bin isn't.)</li>
+</ul>
+<h4>If it's likely just lost property</h4>
+<ul><li>Don't touch it — try to trace the owner: did anyone see who left it, can CCTV help, is there a name label?</li></ul>
+<h4>If HOT says suspicious — the 4Cs</h4>
+<ul>
+<li><strong>Confirm</strong> it's genuinely suspicious, not just unattended.</li>
+<li><strong>Clear</strong> the area — move people back at least 100m even for something small; keep out of line of sight; get behind something solid, away from glass.</li>
+<li><strong>Communicate</strong> — call 999. Do <strong>not</strong> use phones or radios within 15m of the item.</li>
+<li><strong>Control</strong> access — keep everyone out until it's declared safe; keep witnesses for the police.</li>
+</ul>
+<div class="bl">If you think it's suspicious — don't touch it. Clear the area, call 999, and report it.</div>
+<div class="src">Source: ProtectUK — Incident procedures.</div>` },
+
+  { cat:'CT', title:'Marauding Attack', sub:'Run · Hide · Tell', html:
+`<p>A marauding attack is fast and violent, and most harm is done in the first few minutes, before police arrive. Run · Hide · Tell is your personal response.</p>
+<h4>Run</h4>
+<ul><li>Escape if there's a safe route — check it won't take you into greater danger.</li><li>Go quickly and quietly, leave belongings, don't stop to film.</li><li>Get others out with you, but don't let their hesitation hold you up.</li></ul>
+<h4>Hide</h4>
+<ul><li>If you can't run, find solid cover — out of sight isn't the same as safe from gunfire.</li><li>Lock or barricade, move away from doors and windows.</li><li>Silence your phone (including vibrate) and stay quiet.</li><li>Don't trap yourself in a dead end.</li></ul>
+<h4>Tell</h4>
+<ul><li>When safe, call 999: what's happening, exact location, where the attacker was last seen and heading, number and description of attackers and weapons, casualties and exits.</li><li>If you can't speak safely, stay on the line.</li><li>When armed police arrive: follow commands, keep hands visible, avoid sudden movements.</li></ul>
+<div class="bl">Run if you can, hide if you can't, tell police when it's safe. The site's own incident plan sits alongside this.</div>
+<div class="src">Source: NPSA — Marauding Terrorist Attacks; Counter Terrorism Policing / ProtectUK — Run Hide Tell.</div>` },
+
+  { cat:'CT', title:'Hostile Reconnaissance', sub:'SCaN — See · Check · Notify', html:
+`<p>Before an attack, hostiles gather information — watching, testing responses, filming, asking questions. SCaN is about spotting that early.</p>
+<h4>See</h4>
+<ul><li>Stay alert (not suspicious of everyone): unusual behaviour, excessive interest in security or restricted areas, someone out of place or nervous, or attempts to learn routines, staff or the layout.</li></ul>
+<h4>Check</h4>
+<ul><li>Assess before concluding: does the behaviour fit the setting? Is there a reasonable explanation? Does their story match their actions? Are they avoiding attention or cameras?</li><li>A confident greeting — the <strong>"Power of Hello"</strong> — often disrupts a hostile and shows the place is switched on. (Good customer service, too.)</li></ul>
+<h4>Notify</h4>
+<ul><li>If it still feels wrong, report it: tell your supervisor or control room, give clear detail (who, what, where, when, why), follow procedure, escalate to police if needed.</li></ul>
+<div class="bl">See it, check it, notify it — and never underestimate a friendly "hello." Better early than too late.</div>
+<div class="src">Source: NPSA / ProtectUK — SCaN (See, Check and Notify).</div>` },
+
+  { cat:'CT', title:'National Threat Levels', sub:'The five levels', html:
+`<p>The national threat level indicates how likely a terrorist attack is. It's set by the Joint Terrorism Analysis Centre (JTAC), has no expiry date, and is reviewed to stay current.</p>
+<h4>The five levels</h4>
+<ul>
+<li><strong>LOW</strong> — an attack is highly unlikely</li>
+<li><strong>MODERATE</strong> — possible, but not likely</li>
+<li><strong>SUBSTANTIAL</strong> — an attack is likely</li>
+<li><strong>SEVERE</strong> — an attack is highly likely</li>
+<li><strong>CRITICAL</strong> — highly likely in the near future</li>
+</ul>
+<h4>What it means for you</h4>
+<ul><li>It's background awareness — the basics don't change (stay alert, report concerns), but a higher level means heightened vigilance.</li><li>The current level is published on the MI5 website.</li></ul>
+<div class="bl">Know the five levels and what today's level is — it sets the tone for how alert to be.</div>
+<div class="src">Source: ProtectUK — Terrorism threat levels; MI5.</div>` },
+
+  { cat:'CT', title:'Reporting Suspicious Activity', sub:'Know the routes', html:
+`<p>Spotting something only counts if it's reported. Know the routes.</p>
+<ul>
+<li><strong>Emergency / happening now / immediate threat</strong> — call 999.</li>
+<li><strong>Suspected terrorist activity (not an emergency)</strong> — the police ACT reporting route, or the Anti-Terrorist Hotline 0800 789 321.</li>
+<li><strong>Non-imminent information</strong> — you can also contact MI5.</li>
+<li><strong>On site</strong> — follow your own procedure too: tell security, control or management so it's logged and actioned.</li>
+</ul>
+<p>Give clear detail: who, what, where, when, and why it seemed suspicious. Trust your instinct — you won't be wasting anyone's time.</p>
+<div class="bl">999 for emergencies, 0800 789 321 for the hotline. If in doubt, report it.</div>
+<div class="src">Source: ProtectUK — Terrorism threat levels / reporting; Counter Terrorism Policing.</div>` },
+
+  { cat:'HS', title:'Manual Handling', sub:'Think TILE', html:
+`<p>Moving deliveries, barriers and equipment is part of the job — and manual handling is the single biggest cause of workplace injury. Think before you lift.</p>
+<h4>Think TILE</h4>
+<ul>
+<li><strong>Task</strong> — any twisting, carrying far, or repeating?</li>
+<li><strong>Individual</strong> — are you fit for it right now? Don't be a hero.</li>
+<li><strong>Load</strong> — how heavy, bulky, awkward or hard to grip?</li>
+<li><strong>Environment</strong> — floor, space, lighting, obstacles?</li>
+</ul>
+<h4>Good practice</h4>
+<ul>
+<li>Plan the lift and clear your route; use an aid (trolley, sack truck) whenever you can.</li>
+<li>Get help for anything heavy or awkward.</li>
+<li>Stable base, bend your knees not your back, keep the load close.</li>
+<li>Don't twist — move your feet. There's no single "safe" weight; it depends on all the above.</li>
+</ul>
+<div class="bl">Assess with TILE, use aids, get help, and never twist. A moment's thought saves a bad back.</div>
+<div class="src">Source: HSE — INDG143 / Manual Handling Operations Regulations 1992.</div>` },
+
+  { cat:'HS', title:'Slips, Trips &amp; Falls', sub:'Spot it, sort it', html:
+`<p>The most common workplace injury there is — and because you patrol the whole site, you often see the hazards first.</p>
+<h4>Common causes</h4>
+<ul><li>Wet or spilled floors, trailing cables, cluttered walkways, poor lighting, damaged or uneven flooring, curled-up mats. An obstacle as small as 10mm can trip someone.</li></ul>
+<h4>What you can do</h4>
+<ul>
+<li><strong>Deal with it or report it</strong> — clean or flag a spill, move the obstruction, report damaged flooring or a failed light.</li>
+<li><strong>Good housekeeping</strong> — keep walkways and exits clear.</li>
+<li><strong>Watch your footing</strong> — grippy footwear, especially on rounds and stairs (use the handrail).</li>
+<li><strong>Use signage</strong> — put out a wet-floor sign; don't just walk past a hazard.</li>
+</ul>
+<div class="bl">See a hazard, sort it or report it — most slips and trips are completely preventable.</div>
+<div class="src">Source: HSE — slips and trips guidance.</div>` },
+
+  { cat:'HS', title:'Lone Working &amp; Personal Safety', sub:'Plan for isolation', html:
+`<p>Officers often work alone, on nights and at quiet sites. Working alone is legal and usually fine — but isolation is the risk, so plan for it.</p>
+<ul>
+<li><strong>Stay contactable</strong> — keep to your check-in routine (radio/phone); make sure someone knows you're OK and can raise help quickly.</li>
+<li><strong>Know how to summon help</strong> — and test your comms at the start of the shift.</li>
+<li><strong>Keep reassessing</strong> — a situation that was fine earlier can change (a door left open, a visitor, weather, a confrontation). If it stops feeling safe, don't press on alone.</li>
+<li><strong>Personal safety</strong> — plan your rounds, know your exits, don't get cornered, and withdraw and call for help rather than tackle something alone.</li>
+</ul>
+<div class="bl">Stay in contact, keep assessing, and never put yourself at risk to handle something that needs backup.</div>
+<div class="src">Source: HSE — INDG73, Working alone.</div>` },
+
+  { cat:'HS', title:'Conflict Management', sub:'De-escalation', html:
+`<p>Dealing with frustrated or angry people is one of your most-used skills. The aim is to lower the temperature, not win the argument.</p>
+<ul>
+<li><strong>Stay calm and in control</strong> — don't match their anger or raise your voice. How you say it matters as much as what you say.</li>
+<li><strong>Listen actively</strong> — let them speak; repeat back what you've heard so they feel understood.</li>
+<li><strong>Mind your body language</strong> — open stance, relaxed hands, steady but non-staring eye contact, comfortable distance. No pointing or crowding.</li>
+<li><strong>Speak calmly and slowly; firm but respectful</strong> — "let's take this one step at a time."</li>
+<li><strong>Give options and a way out</strong> — people cooperate more when they don't feel trapped.</li>
+<li><strong>Know your limit</strong> — if it turns unsafe, disengage, get distance, call for help. Force is a last resort, never a first move.</li>
+</ul>
+<div class="bl">Calm, listening and good body language de-escalate most situations — and if it isn't safe, step back and get help.</div>
+<div class="src">Source: SIA / recognised security de-escalation good practice.</div>` },
+
+  { cat:'HS', title:'Fire Safety &amp; Evacuation', sub:'General awareness', html:
+`<p>Fire safety is core to the security role. This is the general awareness — your site's specific alarm zones, sweep duties and assembly points live in your site instructions (Site Procedures mode).</p>
+<h4>If you discover a fire</h4>
+<ul>
+<li><strong>Raise the alarm immediately</strong> — no matter how small; fire spreads in seconds.</li>
+<li><strong>Call 999</strong> — give the name, full address and postcode, and where the fire is.</li>
+<li><strong>Get out and get people out</strong> — don't stop for belongings, never use lifts, close (don't lock) doors behind you.</li>
+<li><strong>Go to the assembly point</strong> — help anyone mobility-impaired or with a PEEP.</li>
+<li><strong>Do not re-enter</strong> until the fire service says it's safe — not even for a "quick check."</li>
+<li><strong>Only tackle a small fire if trained and it's safe</strong> — if in any doubt, get out.</li>
+</ul>
+<div class="bl">Raise the alarm, get everyone out, call 999, and never go back in. Life safety first, always.</div>
+<div class="src">Source: HSE / gov.uk workplace fire safety guidance.</div>` }
+];
+
+function setMode(m) {
+  var proc = document.getElementById('procMode');
+  var talk = document.getElementById('talkMode');
+  var tp = document.getElementById('tabProc');
+  var tt = document.getElementById('tabTalk');
+  if (m === 'talk') {
+    proc.style.display = 'none';
+    talk.style.display = 'block';
+    tt.classList.add('active'); tp.classList.remove('active');
+    if (!talk.dataset.built) { renderTalkList(); talk.dataset.built = '1'; }
+    closeTalk();
+  } else {
+    talk.style.display = 'none';
+    proc.style.display = 'flex';
+    tp.classList.add('active'); tt.classList.remove('active');
+  }
+}
+
+function renderTalkList() {
+  var list = document.getElementById('talkList');
+  list.innerHTML = TALKS.map(function (t, i) {
+    var tag = t.cat === 'CT'
+      ? '<span class="talk-tag ct">Counter-Terrorism</span>'
+      : '<span class="talk-tag hs">Health &amp; Safety</span>';
+    return '<button class="talk-card" onclick="openTalk(' + i + ')">' +
+      '<div class="talk-card-main">' +
+        '<div class="talk-card-title">' + t.title + '</div>' +
+        '<div class="talk-card-sub">' + t.sub + '</div>' +
+      '</div>' + tag +
+      '<span class="talk-card-arrow">›</span></button>';
+  }).join('');
+}
+
+function openTalk(i) {
+  var t = TALKS[i];
+  var d = document.getElementById('talkDetail');
+  d.innerHTML =
+    '<button class="talk-back" onclick="closeTalk()">‹ All talks</button>' +
+    '<div class="talk-detail-head">' + t.title + '</div>' +
+    '<div class="talk-detail-sub">' + t.sub + '</div>' +
+    '<div class="talk-body">' + t.html + '</div>';
+  document.getElementById('talkList').style.display = 'none';
+  d.style.display = 'block';
+  document.getElementById('talkMode').scrollTop = 0;
+}
+
+function closeTalk() {
+  var d = document.getElementById('talkDetail');
+  if (d) { d.style.display = 'none'; d.innerHTML = ''; }
+  var l = document.getElementById('talkList');
+  if (l) { l.style.display = 'block'; }
+  var tm = document.getElementById('talkMode');
+  if (tm) { tm.scrollTop = 0; }
 }
 </script>
 </body>
