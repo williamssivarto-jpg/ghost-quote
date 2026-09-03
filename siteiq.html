@@ -739,6 +739,56 @@
       75% { transform: translateX(8px); }
     }
 
+    /* ============ LANGUAGE SELECTOR ============ */
+    .lang-wrap { position: relative; display: flex; }
+    .lang-btn {
+      display: flex; align-items: center; gap: 5px;
+      background: rgba(34,224,255,0.08);
+      border: 1px solid var(--line);
+      color: var(--cyan);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px; font-weight: 700;
+      letter-spacing: 0.5px;
+      padding: 4px 8px; border-radius: 5px;
+      cursor: pointer; transition: all 0.15s;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .lang-btn:hover { border-color: var(--cyan); box-shadow: 0 0 10px rgba(34,224,255,0.25); }
+    .lang-btn svg { width: 13px; height: 13px; fill: none; stroke: var(--cyan); stroke-width: 2; }
+    .lang-btn .caret { font-size: 8px; opacity: 0.7; }
+    .lang-menu {
+      position: absolute; top: calc(100% + 6px); right: 0;
+      z-index: 50;
+      background: var(--panel-solid);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.6), 0 0 20px rgba(34,224,255,0.08);
+      padding: 5px; min-width: 176px;
+      max-height: 320px; overflow-y: auto;
+      display: none;
+    }
+    .lang-menu.open { display: block; }
+    .lang-opt {
+      display: flex; align-items: baseline; justify-content: space-between; gap: 10px;
+      width: 100%; text-align: left;
+      background: transparent; border: none;
+      color: var(--text);
+      font-family: 'Chakra Petch', sans-serif; font-size: 14px;
+      padding: 8px 10px; border-radius: 5px; cursor: pointer;
+      transition: background 0.12s;
+    }
+    .lang-opt:hover { background: rgba(34,224,255,0.1); }
+    .lang-opt.sel { background: rgba(34,224,255,0.14); color: var(--cyan-bright); }
+    .lang-opt .native { font-weight: 600; }
+    .lang-opt .en { font-size: 10px; color: var(--text-soft); font-family: 'JetBrains Mono', monospace; text-transform: uppercase; letter-spacing: 0.5px; }
+    .lang-menu::-webkit-scrollbar { width: 4px; }
+    .lang-menu::-webkit-scrollbar-thumb { background: var(--line); border-radius: 2px; }
+
+    @media (max-width: 380px) {
+      .status-area { gap: 6px; }
+      .clock { display: none; }
+    }
+
     /* ============ MODE TABS + TOOLBOX TALKS ============ */
     .mode-tabs {
       display: flex;
@@ -961,7 +1011,14 @@
         <div class="site-iq-name">Site<span>IQ</span></div>
       </div>
       <div class="status-area">
-        <span class="clock" id="clock">--:--:--</span>
+        <span class="lang-wrap">
+          <button class="lang-btn" id="langBtn" onclick="toggleLangMenu(event)" aria-label="Choose language">
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.6 2.7 2.6 15.3 0 18M12 3c-2.6 2.7-2.6 15.3 0 18"/></svg>
+            <span id="langCode">EN</span><span class="caret">▼</span>
+          </button>
+          <div class="lang-menu" id="langMenu"></div>
+        </span>
+        <span class="clock" id="clock">--:--</span>
         <span class="status-pill"><span class="status-dot"></span>ONLINE</span>
       </div>
     </div>
@@ -1046,7 +1103,7 @@
   function tick() {
     var el = document.getElementById('clock');
     if (el) {
-      el.textContent = new Date().toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+      el.textContent = new Date().toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
     }
   }
   tick();
@@ -1597,32 +1654,31 @@ function speakResponse(text) {
     .replace(/\s+/g, ' ')
     .trim();
 
+  const L = (typeof LANGS !== 'undefined' && LANGS[currentLang]) ? LANGS[currentLang] : { tts: 'en-GB', voicePrefs: [] };
   const utterance = new SpeechSynthesisUtterance(clean);
-  utterance.lang = 'en-GB';
-  utterance.rate = 0.88;
+  utterance.lang = L.tts;
+  utterance.rate = 0.9;
   utterance.pitch = 1.0;
   utterance.volume = 1.0;
 
-  // Select best available British English voice
   const voices = window.speechSynthesis.getVoices();
-  const preferred = [
-    'Google UK English Female',
-    'Google UK English Male',
-    'Microsoft Libby Online (Natural)',
-    'Microsoft Ryan Online (Natural)',
-    'Microsoft Sonia Online (Natural)'
-  ];
-
   let selectedVoice = null;
-  for (const name of preferred) {
-    const found = voices.find(v => v.name === name);
-    if (found) { selectedVoice = found; break; }
-  }
 
-  if (!selectedVoice) {
-    selectedVoice = voices.find(v => v.lang === 'en-GB') ||
-                    voices.find(v => v.lang.startsWith('en'));
+  // 1) preferred named voices (mainly to get a good English voice)
+  if (L.voicePrefs && L.voicePrefs.length) {
+    for (const name of L.voicePrefs) {
+      const found = voices.find(v => v.name === name);
+      if (found) { selectedVoice = found; break; }
+    }
   }
+  // 2) exact language-region match, then base-language match
+  if (!selectedVoice) {
+    const base = (L.tts.split('-')[0] || '').toLowerCase();
+    selectedVoice = voices.find(v => v.lang === L.tts) ||
+                    voices.find(v => v.lang && v.lang.toLowerCase().indexOf(base) === 0);
+  }
+  // 3) if no matching voice on this device, leave voice unset so the engine
+  //    uses its own default for utterance.lang (never errors — worst case English)
 
   if (selectedVoice) utterance.voice = selectedVoice;
   window.speechSynthesis.speak(utterance);
@@ -1678,6 +1734,7 @@ function startListening() {
     if (!recognition) return;
   }
   try {
+    if (typeof LANGS !== 'undefined' && LANGS[currentLang]) { recognition.lang = LANGS[currentLang].mic; }
     recognition.start();
     isListening = true;
     voiceMode = true;
@@ -1901,6 +1958,70 @@ function closeTalk() {
   if (l) { l.style.display = 'block'; }
   var tm = document.getElementById('talkMode');
   if (tm) { tm.scrollTop = 0; }
+}
+</script>
+
+<!-- ================================================================
+     LANGUAGE SELECTOR (voice: mic + read-back follow the officer's language)
+     Text answers are already multilingual via the system prompt.
+     ================================================================ -->
+<script>
+var LANGS = {
+  en: { code:'EN', native:'English',   en:'English',    mic:'en-GB', tts:'en-GB',
+        voicePrefs:['Google UK English Female','Google UK English Male','Microsoft Libby Online (Natural)','Microsoft Sonia Online (Natural)','Microsoft Ryan Online (Natural)'] },
+  pl: { code:'PL', native:'Polski',    en:'Polish',     mic:'pl-PL', tts:'pl-PL', voicePrefs:[] },
+  ro: { code:'RO', native:'Română',    en:'Romanian',   mic:'ro-RO', tts:'ro-RO', voicePrefs:[] },
+  es: { code:'ES', native:'Español',   en:'Spanish',    mic:'es-ES', tts:'es-ES', voicePrefs:[] },
+  pt: { code:'PT', native:'Português', en:'Portuguese', mic:'pt-PT', tts:'pt-PT', voicePrefs:[] },
+  ur: { code:'UR', native:'اردو',      en:'Urdu',       mic:'ur-PK', tts:'ur-PK', voicePrefs:[] },
+  pa: { code:'PA', native:'ਪੰਜਾਬੀ',     en:'Punjabi',    mic:'pa-IN', tts:'pa-IN', voicePrefs:[] },
+  bn: { code:'BN', native:'বাংলা',      en:'Bengali',    mic:'bn-BD', tts:'bn-BD', voicePrefs:[] },
+  ar: { code:'AR', native:'العربية',    en:'Arabic',     mic:'ar-SA', tts:'ar-SA', voicePrefs:[] },
+  so: { code:'SO', native:'Soomaali',  en:'Somali',     mic:'so-SO', tts:'so-SO', voicePrefs:[] }
+};
+var LANG_ORDER = ['en','pl','ro','es','pt','ur','pa','bn','ar','so'];
+var currentLang = 'en';
+
+function renderLangMenu() {
+  var menu = document.getElementById('langMenu');
+  if (!menu) return;
+  menu.innerHTML = LANG_ORDER.map(function (k) {
+    var l = LANGS[k];
+    return '<button class="lang-opt' + (k === currentLang ? ' sel' : '') + '" onclick="setLang(\'' + k + '\')">' +
+      '<span class="native">' + l.native + '</span><span class="en">' + l.en + '</span></button>';
+  }).join('');
+}
+
+function toggleLangMenu(e) {
+  if (e) e.stopPropagation();
+  var menu = document.getElementById('langMenu');
+  if (!menu) return;
+  if (!menu.dataset.built) { renderLangMenu(); menu.dataset.built = '1'; }
+  menu.classList.toggle('open');
+}
+
+function setLang(k) {
+  if (!LANGS[k]) return;
+  currentLang = k;
+  document.getElementById('langCode').textContent = LANGS[k].code;
+  renderLangMenu();
+  document.getElementById('langMenu').classList.remove('open');
+  if (window.speechSynthesis) { window.speechSynthesis.getVoices(); } // warm up voices
+}
+
+// Close the menu when tapping elsewhere
+document.addEventListener('click', function (e) {
+  var btn = document.getElementById('langBtn');
+  var menu = document.getElementById('langMenu');
+  if (!menu) return;
+  if (btn && (btn === e.target || btn.contains(e.target))) return;
+  if (menu.contains(e.target)) return;
+  menu.classList.remove('open');
+});
+
+// Some browsers load voices asynchronously — refresh once they're ready
+if (window.speechSynthesis) {
+  window.speechSynthesis.onvoiceschanged = function () { window.speechSynthesis.getVoices(); };
 }
 </script>
 </body>
