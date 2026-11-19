@@ -2,1174 +2,367 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>SiteIQ — Hartfield Building Society</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="manifest" href="manifest.json">
-  <meta name="theme-color" content="#070d1a">
+  <meta name="theme-color" content="#0B1220">
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="SiteIQ">
   <link rel="apple-touch-icon" href="siteiq-icon-180.png">
   <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
     :root {
-      --bg-deep: #050a14;
-      --bg: #070d1a;
-      --panel: rgba(14, 23, 40, 0.72);
-      --panel-solid: #0d1626;
-      --cyan: #22e0ff;
-      --cyan-bright: #6cf0ff;
-      --cyan-dim: #1aa6c4;
-      --cyan-glow: rgba(34, 224, 255, 0.55);
-      --line: rgba(34, 224, 255, 0.20);
-      --line-soft: rgba(120, 170, 200, 0.14);
-      --text: #dbeaf5;
-      --text-soft: #9fb6c9;
-      --muted: #5d7a92;
-      --red: #ff4d57;
-      --red-soft: rgba(255, 77, 87, 0.14);
-      --green: #34e3a4;
+      --bg: #0B1220;
+      --bg-2: #0E1626;
+      --surface: #121B2E;
+      --surface-2: #1A2440;
+      --raised: #1E2B45;
+      --line: #1F2A40;
+      --line-2: #24304A;
+      --text: #E8EDF5;
+      --muted: #9AA6B8;
+      --accent: #5AB8D9;
+      --danger: #C42F36;
+      --call: #17804A;
+      --ok: #3DD68C;
+      --radius: 14px;
     }
-
-    html, body {
-      height: 100%;
-      background: var(--bg-deep);
+    * { box-sizing: border-box; }
+    html, body { margin: 0; height: 100%; }
+    body {
+      background: var(--bg);
       color: var(--text);
-      font-family: 'Chakra Petch', sans-serif;
-      overflow: hidden;
+      font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+      font-size: 15px;
+      -webkit-font-smoothing: antialiased;
+      -webkit-tap-highlight-color: transparent;
     }
+    button, input, textarea { font: inherit; color: inherit; }
+    button { cursor: pointer; }
+    :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+    .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+    svg.i { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; flex: none; }
 
-    /* ============ ATMOSPHERE ============ */
-    #net, .glow, .grid-overlay, .scan, .vignette {
-      position: fixed;
-      inset: 0;
-      z-index: 0;
-      pointer-events: none;
-    }
-    #net { z-index: 1; }
-
-    body::before {
-      content: "";
-      position: fixed;
-      inset: 0;
-      z-index: 0;
-      background:
-        radial-gradient(120% 80% at 50% -10%, #0c1b30 0%, var(--bg) 45%, var(--bg-deep) 100%);
-    }
-
-    .glow {
-      border-radius: 50%;
-      filter: blur(80px);
-      opacity: 0.5;
-    }
-    .glow-1 {
-      width: 60vw; height: 60vw;
-      left: -15vw; top: -20vh;
-      background: radial-gradient(circle, rgba(34,224,255,0.22), transparent 70%);
-      animation: drift1 22s ease-in-out infinite;
-    }
-    .glow-2 {
-      width: 55vw; height: 55vw;
-      right: -20vw; bottom: -25vh; left: auto;
-      background: radial-gradient(circle, rgba(34,120,255,0.18), transparent 70%);
-      animation: drift2 28s ease-in-out infinite;
-    }
-    @keyframes drift1 { 0%,100% { transform: translate(0,0); } 50% { transform: translate(6vw, 4vh); } }
-    @keyframes drift2 { 0%,100% { transform: translate(0,0); } 50% { transform: translate(-5vw, -3vh); } }
-
-    .grid-overlay {
-      background-image:
-        linear-gradient(rgba(34,224,255,0.05) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(34,224,255,0.05) 1px, transparent 1px);
-      background-size: 44px 44px;
-      mask-image: radial-gradient(120% 100% at 50% 0%, #000 30%, transparent 85%);
-      -webkit-mask-image: radial-gradient(120% 100% at 50% 0%, #000 30%, transparent 85%);
-      opacity: 0.6;
-    }
-
-    .scan {
-      background: repeating-linear-gradient(
-        to bottom,
-        rgba(255,255,255,0.02) 0px,
-        rgba(255,255,255,0.02) 1px,
-        transparent 1px,
-        transparent 3px
-      );
-      opacity: 0.5;
-      animation: scanmove 8s linear infinite;
-    }
-    @keyframes scanmove { from { background-position-y: 0; } to { background-position-y: 120px; } }
-
-    .vignette {
-      box-shadow: inset 0 0 200px 40px rgba(0,0,0,0.65);
-      z-index: 2;
-    }
-
-    /* ============ APP SHELL ============ */
-    .app {
-      position: relative;
-      z-index: 3;
-      display: flex;
-      flex-direction: column;
-      height: 100vh;
-      max-width: 540px;
-      margin: 0 auto;
-      background:
-        linear-gradient(180deg, rgba(10,18,32,0.92), rgba(7,13,26,0.96));
-      backdrop-filter: blur(6px);
-      -webkit-backdrop-filter: blur(6px);
-      border-left: 1px solid var(--line);
-      border-right: 1px solid var(--line);
-      box-shadow:
-        0 0 60px rgba(0,0,0,0.6),
-        0 0 1px var(--cyan) inset;
-    }
-
-    /* tactical corner brackets on the console */
-    .corner {
-      position: absolute;
-      width: 18px; height: 18px;
-      border: 2px solid var(--cyan);
-      z-index: 6;
-      opacity: 0.7;
-      pointer-events: none;
-      filter: drop-shadow(0 0 4px var(--cyan-glow));
-    }
-    .corner.tl { top: 8px; left: 8px; border-right: none; border-bottom: none; }
-    .corner.tr { top: 8px; right: 8px; border-left: none; border-bottom: none; }
-    .corner.bl { bottom: 8px; left: 8px; border-right: none; border-top: none; }
-    .corner.br { bottom: 8px; right: 8px; border-left: none; border-top: none; }
-
-    /* ============ HEADER ============ */
-    .header {
-      position: relative;
-      background: linear-gradient(180deg, rgba(11,21,38,0.95), rgba(9,16,30,0.85));
-      border-bottom: 1px solid var(--line);
-      padding: 0 16px;
-      flex-shrink: 0;
-    }
-    .header::after {
-      content: "";
-      position: absolute;
-      left: 0; right: 0; bottom: -1px; height: 1px;
-      background: linear-gradient(90deg, transparent, var(--cyan), transparent);
-      box-shadow: 0 0 10px var(--cyan-glow);
-    }
-
-    .header-top {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 13px 0 9px;
-    }
-
-    .logo-area { display: flex; align-items: center; gap: 11px; }
-
-    .siteiq-badge {
-      position: relative;
-      background: rgba(34,224,255,0.10);
-      border: 1px solid var(--cyan);
-      color: var(--cyan);
-      font-family: 'JetBrains Mono', monospace;
-      font-weight: 700;
-      font-size: 12px;
-      padding: 4px 9px;
-      letter-spacing: 1.5px;
-      text-transform: uppercase;
-      box-shadow: 0 0 12px rgba(34,224,255,0.25), inset 0 0 8px rgba(34,224,255,0.08);
-    }
-
-    .site-iq-name {
-      font-family: 'Chakra Petch', sans-serif;
-      font-weight: 700;
-      font-size: 19px;
-      color: var(--text);
-      letter-spacing: 1px;
-    }
-    .site-iq-name span {
-      color: var(--cyan);
-      text-shadow: 0 0 12px var(--cyan-glow);
-    }
-
-    .status-area {
-      display: flex;
-      align-items: center;
-      gap: 9px;
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 11px;
-      color: var(--green);
-      font-weight: 500;
-      letter-spacing: 1px;
-    }
-    .clock {
-      color: var(--text-soft);
-      font-size: 11px;
-      letter-spacing: 1px;
-      opacity: 0.85;
-    }
-    .status-pill { display: flex; align-items: center; gap: 6px; }
-
-    .status-dot {
-      width: 8px; height: 8px;
-      background: var(--green);
-      border-radius: 50%;
-      box-shadow: 0 0 8px var(--green);
-      animation: pulse 2s infinite;
-    }
-    @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.3; } }
-
-    .header-site {
-      padding: 8px 0 11px;
-      border-top: 1px solid var(--line-soft);
-    }
-    .header-site-name {
-      font-weight: 500;
-      font-size: 13px;
-      color: var(--text);
-      letter-spacing: 0.3px;
-    }
-    .header-site-ref {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 10px;
-      color: var(--muted);
-      margin-top: 3px;
-      letter-spacing: 0.5px;
-    }
-
-    /* ============ QUICK PROMPTS ============ */
-    .quick-wrap {
-      position: relative;
-      flex-shrink: 0;
-    }
-    .quick-wrap::after {
-      content: "";
-      position: absolute;
-      top: 0; right: 0; bottom: 0;
-      width: 52px;
-      pointer-events: none;
-      background: linear-gradient(to right, rgba(7,13,26,0), rgba(7,13,26,0.96));
-      z-index: 2;
-    }
-    .swipe-hint {
-      position: absolute;
-      top: 50%; right: 12px;
-      transform: translateY(-50%);
-      z-index: 3;
-      color: var(--cyan);
-      font-size: 22px;
-      font-weight: 700;
-      pointer-events: none;
-      text-shadow: 0 0 10px var(--cyan-glow);
-      animation: swipeNudge 1.4s ease-in-out infinite;
-    }
-    @keyframes swipeNudge {
-      0%,100% { transform: translateY(-50%) translateX(0); opacity: 0.45; }
-      50% { transform: translateY(-50%) translateX(5px); opacity: 1; }
-    }
-    .quick-prompts {
-      padding: 11px 12px;
-      display: flex;
-      gap: 7px;
-      overflow-x: auto;
-      -webkit-overflow-scrolling: touch;
-      background: rgba(7,13,26,0.5);
-      border-bottom: 1px solid var(--line-soft);
-      scrollbar-width: thin;
-      scrollbar-color: var(--cyan-dim) transparent;
-    }
-    .quick-prompts::-webkit-scrollbar { height: 4px; }
-    .quick-prompts::-webkit-scrollbar-thumb { background: var(--cyan-dim); border-radius: 2px; }
-    .quick-prompts::-webkit-scrollbar-track { background: transparent; }
-
-    .quick-btn {
-      position: relative;
-      background: rgba(34,224,255,0.05);
-      border: 1px solid var(--line);
-      color: var(--cyan);
-      font-family: 'Chakra Petch', sans-serif;
-      font-size: 11px;
-      font-weight: 600;
-      padding: 6px 12px;
-      cursor: pointer;
-      white-space: nowrap;
-      border-radius: 4px;
-      letter-spacing: 0.6px;
-      text-transform: uppercase;
-      transition: all 0.16s ease;
-    }
-    .quick-btn::before {
-      content: "›";
-      margin-right: 6px;
-      opacity: 0.6;
-      font-weight: 700;
-    }
-    .quick-btn:hover {
-      background: rgba(34,224,255,0.16);
-      border-color: var(--cyan);
-      box-shadow: 0 0 14px rgba(34,224,255,0.3);
-      color: var(--cyan-bright);
-    }
-
-    .quick-btn.alarm {
-      color: var(--red);
-      border-color: rgba(255,77,87,0.4);
-      background: rgba(255,77,87,0.06);
-    }
-    .quick-btn.alarm::before { content: "!"; }
-    .quick-btn.alarm:hover {
-      background: rgba(255,77,87,0.18);
-      border-color: var(--red);
-      box-shadow: 0 0 14px rgba(255,77,87,0.35);
-      color: #ff8a91;
-    }
-
-    /* ============ MESSAGES ============ */
-    .messages {
-      flex: 1;
-      overflow-y: auto;
-      padding: 18px 14px;
-      display: flex;
-      flex-direction: column;
-      gap: 15px;
-      background: rgba(5,10,20,0.35);
-    }
-    .messages::-webkit-scrollbar { width: 4px; }
-    .messages::-webkit-scrollbar-thumb { background: var(--line); border-radius: 2px; }
-
-    /* SYSTEM MESSAGE */
-    .msg-system {
-      position: relative;
-      background: rgba(34,224,255,0.06);
-      border: 1px solid var(--line);
-      border-left: 3px solid var(--cyan);
-      padding: 13px 15px;
-      border-radius: 0 6px 6px 0;
-      box-shadow: 0 0 20px rgba(34,224,255,0.06) inset;
-    }
-    .msg-system-header {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 10px;
-      font-weight: 700;
-      color: var(--cyan);
-      letter-spacing: 1.5px;
-      text-transform: uppercase;
-      margin-bottom: 6px;
-    }
-    .msg-system p {
-      font-size: 13px;
-      color: var(--text-soft);
-      line-height: 1.55;
-      font-weight: 300;
-    }
-
-    /* USER MESSAGE */
-    .msg-user { align-self: flex-end; max-width: 85%; }
-    .msg-user-bubble {
-      background: linear-gradient(135deg, rgba(34,224,255,0.18), rgba(34,224,255,0.08));
-      border: 1px solid var(--cyan);
-      color: var(--cyan-bright);
-      padding: 10px 14px;
-      font-size: 14px;
-      line-height: 1.5;
-      border-radius: 14px 14px 4px 14px;
-      box-shadow: 0 0 16px rgba(34,224,255,0.18);
-    }
-    .msg-user-time {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 10px;
-      color: var(--muted);
-      text-align: right;
-      margin-top: 4px;
-    }
-
-    /* AI MESSAGE */
-    .msg-ai { align-self: flex-start; max-width: 92%; }
-    .msg-ai-header { display: flex; align-items: center; gap: 6px; margin-bottom: 6px; }
-    .msg-ai-badge {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 10px;
-      font-weight: 700;
-      color: var(--bg-deep);
-      background: var(--cyan);
-      padding: 2px 9px;
-      border-radius: 3px;
-      letter-spacing: 1px;
-      text-transform: uppercase;
-      box-shadow: 0 0 12px var(--cyan-glow);
-    }
-    .msg-ai-bubble {
-      background: rgba(13,22,38,0.85);
-      border: 1px solid var(--line);
-      border-left: 2px solid var(--cyan-dim);
-      padding: 14px 16px;
-      font-size: 14px;
-      line-height: 1.62;
-      color: var(--text);
-      border-radius: 4px 14px 14px 14px;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.35);
-    }
-    .msg-ai-bubble strong { color: var(--cyan); font-weight: 600; }
-    .msg-ai-bubble .msg-ai-title {
-      display: block;
-      font-family: 'Chakra Petch', sans-serif;
-      font-weight: 700;
-      color: var(--cyan);
-      font-size: 14px;
-      letter-spacing: 0.5px;
-      margin: 2px 0 6px;
-      text-shadow: 0 0 10px rgba(34,224,255,0.25);
-    }
-    .msg-ai-bubble ol, .msg-ai-bubble ul { margin-left: 18px; margin-top: 8px; }
-    .msg-ai-bubble li { margin-bottom: 5px; }
-
-    .msg-ai-bubble .phone-number {
-      display: inline-block;
-      background: rgba(52,227,164,0.12);
-      border: 1px solid rgba(52,227,164,0.5);
-      color: var(--green);
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 12px;
-      font-weight: 500;
-      padding: 1px 7px;
-      border-radius: 3px;
-      margin: 1px 2px;
-    }
-    .msg-ai-bubble .urgent {
-      background: var(--red-soft);
-      border-left: 3px solid var(--red);
-      padding: 8px 11px;
-      margin: 8px 0;
-      font-weight: 500;
-      color: #ff8a91;
-      font-size: 13px;
-      border-radius: 0 4px 4px 0;
-    }
-    .msg-ai-time {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 10px;
-      color: var(--muted);
-      margin-top: 4px;
-    }
-
-    /* TYPING */
-    .typing {
-      display: flex;
-      align-items: center;
-      gap: 11px;
-      background: rgba(13,22,38,0.85);
-      border: 1px solid var(--line);
-      padding: 12px 16px;
-      border-radius: 4px 14px 14px 14px;
-      align-self: flex-start;
-    }
-    .typing-dots { display: flex; gap: 4px; }
-    .typing-dots span {
-      width: 6px; height: 6px;
-      background: var(--cyan);
-      border-radius: 50%;
-      box-shadow: 0 0 6px var(--cyan-glow);
-      animation: typing 1.2s infinite;
-    }
-    .typing-dots span:nth-child(2) { animation-delay: 0.2s; }
-    .typing-dots span:nth-child(3) { animation-delay: 0.4s; }
-    @keyframes typing {
-      0%, 60%, 100% { opacity: 0.2; transform: translateY(0); }
-      30% { opacity: 1; transform: translateY(-3px); }
-    }
-    .typing-label {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 11px;
-      color: var(--text-soft);
-      letter-spacing: 0.5px;
-    }
-
-    /* ============ INPUT AREA ============ */
-    .input-area {
-      position: relative;
-      background: linear-gradient(0deg, rgba(11,21,38,0.95), rgba(9,16,30,0.8));
-      border-top: 1px solid var(--line);
-      padding: 11px 12px;
-      padding-bottom: max(11px, env(safe-area-inset-bottom));
-      display: flex;
-      gap: 8px;
-      align-items: flex-end;
-      flex-shrink: 0;
-    }
-    .input-area::before {
-      content: "";
-      position: absolute;
-      left: 0; right: 0; top: -1px; height: 1px;
-      background: linear-gradient(90deg, transparent, var(--cyan), transparent);
-      box-shadow: 0 0 10px var(--cyan-glow);
-      opacity: 0.6;
-    }
-
-    .input-wrap {
-      flex: 1;
-      background: rgba(5,10,20,0.7);
-      border: 1px solid var(--line);
-      border-radius: 22px;
-      display: flex;
-      align-items: flex-end;
-      transition: all 0.2s;
-      padding: 2px 4px 2px 15px;
-    }
-    .input-wrap:focus-within {
-      border-color: var(--cyan);
-      box-shadow: 0 0 16px rgba(34,224,255,0.25);
-    }
-
-    textarea {
-      flex: 1;
-      background: transparent;
-      border: none;
-      outline: none;
-      color: var(--text);
-      font-family: 'Chakra Petch', sans-serif;
-      font-size: 14px;
-      font-weight: 400;
-      padding: 9px 0;
-      resize: none;
-      max-height: 100px;
-      line-height: 1.4;
-    }
-    textarea::placeholder { color: var(--muted); }
-
-    .send-btn {
-      width: 46px; height: 46px;
-      background: var(--cyan);
-      border: none;
-      border-radius: 50%;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: all 0.15s;
-      flex-shrink: 0;
-      box-shadow: 0 0 16px rgba(34,224,255,0.4);
-    }
-    .send-btn:hover { background: var(--cyan-bright); box-shadow: 0 0 22px rgba(34,224,255,0.6); }
-    .send-btn:disabled { background: rgba(120,150,170,0.25); box-shadow: none; cursor: not-allowed; }
-    .send-btn svg {
-      width: 18px; height: 18px;
-      stroke: var(--bg-deep);
-      fill: none;
-      stroke-width: 2.5;
-      stroke-linecap: round;
-      stroke-linejoin: round;
-    }
-    .send-btn:disabled svg { stroke: rgba(255,255,255,0.4); }
-
-    /* MIC BUTTON */
-    .mic-btn {
-      width: 46px; height: 46px;
-      background: rgba(34,224,255,0.07);
-      border: 1px solid var(--cyan-dim);
-      border-radius: 50%;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: all 0.15s;
-      flex-shrink: 0;
-      box-shadow: 0 0 12px rgba(34,224,255,0.20);
-    }
-    .mic-btn:hover { border-color: var(--cyan); box-shadow: 0 0 18px rgba(34,224,255,0.4); }
-    .mic-btn.listening {
-      background: var(--red-soft);
-      border-color: var(--red);
-      box-shadow: none;
-      animation: mic-pulse 1s infinite;
-    }
-    .mic-btn svg {
-      width: 19px; height: 19px;
-      fill: var(--cyan-bright);
-      filter: drop-shadow(0 0 4px var(--cyan-glow));
-    }
-    .mic-btn.listening svg { fill: var(--red); filter: none; }
-    @keyframes mic-pulse {
-      0%,100% { box-shadow: 0 0 0 0 rgba(255,77,87,0.35); }
-      50% { box-shadow: 0 0 0 8px rgba(255,77,87,0); }
-    }
-
-    /* FOOTER */
-    .footer-note {
-      text-align: center;
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 9px;
-      color: var(--muted);
-      padding: 6px 5px;
-      padding-bottom: max(6px, env(safe-area-inset-bottom));
-      background: rgba(7,13,26,0.9);
-      border-top: 1px solid var(--line-soft);
-      flex-shrink: 0;
-      letter-spacing: 1px;
-    }
-
-    /* ============ PIN SCREEN ============ */
+    /* ---------- PIN ---------- */
     .pin-screen {
-      position: fixed;
-      inset: 0;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      z-index: 1000;
-      padding: 40px 20px;
+      position: fixed; inset: 0; z-index: 10; background: var(--bg);
+      display: flex; flex-direction: column; align-items: center;
+      padding: max(64px, 9vh) 24px 32px; overflow-y: auto;
     }
     .pin-screen.hidden { display: none; }
-
-    .pin-card {
-      position: relative;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: 46px 38px 38px;
-      background: var(--panel);
-      backdrop-filter: blur(14px);
-      -webkit-backdrop-filter: blur(14px);
-      border: 1px solid var(--line);
-      border-radius: 14px;
-      box-shadow: 0 0 60px rgba(0,0,0,0.6), 0 0 30px rgba(34,224,255,0.08) inset;
-    }
-
-    .pin-logo {
-      font-family: 'Chakra Petch', sans-serif;
-      font-weight: 700;
-      font-size: 44px;
-      color: var(--text);
-      letter-spacing: 2px;
-      margin-bottom: 6px;
-    }
-    .pin-logo span { color: var(--cyan); text-shadow: 0 0 18px var(--cyan-glow); }
-
-    .pin-subtitle {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 11px;
-      color: var(--muted);
-      margin-bottom: 44px;
-      letter-spacing: 2px;
-      text-transform: uppercase;
-    }
-
-    .pin-label {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 11px;
-      font-weight: 500;
-      color: var(--text-soft);
-      letter-spacing: 3px;
-      text-transform: uppercase;
-      margin-bottom: 22px;
-    }
-
-    .pin-dots { display: flex; gap: 16px; margin-bottom: 40px; }
-    .pin-dot {
-      width: 15px; height: 15px;
-      border-radius: 50%;
-      border: 1.5px solid rgba(120,170,200,0.35);
-      background: transparent;
-      transition: all 0.15s;
-    }
-    .pin-dot.filled {
-      background: var(--cyan);
-      border-color: var(--cyan);
-      box-shadow: 0 0 14px var(--cyan-glow);
-    }
-
-    .pin-keypad {
-      display: grid;
-      grid-template-columns: repeat(3, 70px);
-      gap: 13px;
-      margin-bottom: 18px;
-    }
+    .pin-logo { display: flex; flex-direction: column; align-items: center; gap: 10px; }
+    .pin-logo svg { width: 48px; height: 48px; stroke: var(--accent); stroke-width: 1.8; }
+    .pin-logo .name { font-size: 28px; font-weight: 700; letter-spacing: -0.01em; }
+    .pin-site { margin-top: 4px; color: var(--muted); font-size: 15px; }
+    .pin-label { margin-top: 40px; font-size: 15px; font-weight: 500; }
+    .pin-dots { display: flex; gap: 16px; margin-top: 16px; }
+    .pin-dot { width: 14px; height: 14px; border-radius: 50%; border: 2px solid #3A4766; transition: background .15s, border-color .15s; }
+    .pin-dot.filled { background: var(--accent); border-color: var(--accent); }
+    .pin-keypad { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-top: 36px; width: min(288px, 100%); }
     .pin-key {
-      width: 70px; height: 70px;
-      border-radius: 50%;
-      border: 1px solid var(--line);
-      background: rgba(34,224,255,0.04);
-      color: var(--text);
-      font-family: 'Chakra Petch', sans-serif;
-      font-size: 24px;
-      font-weight: 400;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: all 0.13s;
-      -webkit-tap-highlight-color: transparent;
+      height: 68px; border-radius: 16px; border: 1px solid var(--line);
+      background: var(--surface); font-size: 26px; font-weight: 500;
     }
-    .pin-key:hover, .pin-key:active {
-      background: rgba(34,224,255,0.16);
-      border-color: var(--cyan);
-      box-shadow: 0 0 16px rgba(34,224,255,0.3);
-      color: var(--cyan-bright);
-    }
-    .pin-key.delete { font-size: 18px; color: var(--text-soft); }
-    .pin-key.empty { border: none; background: transparent; cursor: default; pointer-events: none; }
+    .pin-key:active { background: var(--raised); }
+    .pin-key.delete { border: none; background: transparent; color: var(--muted); display: flex; align-items: center; justify-content: center; }
+    .pin-key.delete svg { width: 26px; height: 26px; }
+    .pin-key.empty { visibility: hidden; }
+    .pin-error { min-height: 22px; margin-top: 18px; color: #FF8A8F; font-size: 14px; text-align: center; }
+    .pin-footer { margin-top: auto; padding-top: 24px; color: var(--muted); font-size: 12px; text-align: center; }
 
-    .pin-error {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 12px;
-      color: var(--red);
-      height: 20px;
-      text-align: center;
-      letter-spacing: 0.5px;
-      animation: shake 0.3s ease;
+    /* ---------- APP SHELL ---------- */
+    .app {
+      height: 100dvh; max-width: 560px; margin: 0 auto;
+      display: flex; flex-direction: column; background: var(--bg);
     }
+    @media (min-width: 600px) { .app { border-left: 1px solid var(--line); border-right: 1px solid var(--line); } }
 
-    .pin-site-info {
-      margin-top: 36px;
-      text-align: center;
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 10px;
-      color: var(--muted);
-      letter-spacing: 1px;
-      line-height: 1.7;
-      z-index: 3;
-    }
+    .header { display: flex; align-items: center; justify-content: space-between; padding: 14px 16px 10px; }
+    .logo { display: flex; align-items: center; gap: 9px; font-size: 20px; font-weight: 700; letter-spacing: -0.01em; }
+    .logo svg { width: 28px; height: 28px; stroke: var(--accent); }
+    .status-area { display: flex; align-items: center; gap: 10px; }
+    .status-pill { display: flex; align-items: center; gap: 6px; font-size: 13px; color: var(--muted); }
+    .status-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--ok); }
 
-    @keyframes shake {
-      0%,100% { transform: translateX(0); }
-      25% { transform: translateX(-8px); }
-      75% { transform: translateX(8px); }
-    }
-
-    /* ============ LANGUAGE SELECTOR ============ */
-    .lang-wrap { position: relative; display: flex; }
+    .lang-wrap { position: relative; }
     .lang-btn {
-      display: flex; align-items: center; gap: 5px;
-      background: rgba(34,224,255,0.08);
-      border: 1px solid var(--line);
-      color: var(--cyan);
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 11px; font-weight: 700;
-      letter-spacing: 0.5px;
-      padding: 4px 8px; border-radius: 5px;
-      cursor: pointer; transition: all 0.15s;
-      -webkit-tap-highlight-color: transparent;
+      display: flex; align-items: center; gap: 6px; height: 44px; padding: 0 12px;
+      border-radius: 10px; border: 1px solid var(--line-2); background: var(--surface);
+      font-size: 14px; font-weight: 600;
     }
-    .lang-btn:hover { border-color: var(--cyan); box-shadow: 0 0 10px rgba(34,224,255,0.25); }
-    .lang-btn svg { width: 13px; height: 13px; fill: none; stroke: var(--cyan); stroke-width: 2; }
-    .lang-btn .caret { font-size: 8px; opacity: 0.7; }
+    .lang-btn svg { width: 16px; height: 16px; }
     .lang-menu {
-      position: absolute; top: calc(100% + 6px); right: 0;
-      z-index: 50;
-      background: var(--panel-solid);
-      border: 1px solid var(--line);
-      border-radius: 8px;
-      box-shadow: 0 8px 30px rgba(0,0,0,0.6), 0 0 20px rgba(34,224,255,0.08);
-      padding: 5px; min-width: 176px;
-      max-height: 320px; overflow-y: auto;
-      display: none;
+      display: none; position: absolute; right: 0; top: 50px; z-index: 20; width: 220px; max-height: 60vh; overflow-y: auto;
+      padding: 6px; border-radius: 12px; border: 1px solid var(--line-2); background: var(--surface);
+      box-shadow: 0 12px 32px rgba(0,0,0,.45);
     }
     .lang-menu.open { display: block; }
     .lang-opt {
-      display: flex; align-items: baseline; justify-content: space-between; gap: 10px;
-      width: 100%; text-align: left;
-      background: transparent; border: none;
-      color: var(--text);
-      font-family: 'Chakra Petch', sans-serif; font-size: 14px;
-      padding: 8px 10px; border-radius: 5px; cursor: pointer;
-      transition: background 0.12s;
+      display: flex; justify-content: space-between; align-items: center; width: 100%; min-height: 44px; padding: 0 12px;
+      border: none; border-radius: 8px; background: transparent; text-align: left;
     }
-    .lang-opt:hover { background: rgba(34,224,255,0.1); }
-    .lang-opt.sel { background: rgba(34,224,255,0.14); color: var(--cyan-bright); }
+    .lang-opt:hover { background: var(--raised); }
+    .lang-opt.sel { background: var(--raised); box-shadow: inset 3px 0 0 var(--accent); }
     .lang-opt .native { font-weight: 600; }
-    .lang-opt .en { font-size: 10px; color: var(--text-soft); font-family: 'JetBrains Mono', monospace; text-transform: uppercase; letter-spacing: 0.5px; }
-    .lang-menu::-webkit-scrollbar { width: 4px; }
-    .lang-menu::-webkit-scrollbar-thumb { background: var(--line); border-radius: 2px; }
+    .lang-opt .en { color: var(--muted); font-size: 13px; }
 
-    @media (max-width: 380px) {
-      .status-area { gap: 6px; }
-      .clock { display: none; }
-    }
+    .site-card { margin: 0 16px; padding: 12px 16px; border-radius: var(--radius); background: var(--surface); border: 1px solid var(--line); }
+    .site-name { font-size: 17px; font-weight: 600; }
+    .site-sub { margin-top: 3px; font-size: 13px; color: var(--muted); }
+    .site-ver { margin-top: 6px; font-size: 12px; color: var(--muted); }
 
-    /* ============ MODE TABS + TOOLBOX TALKS ============ */
     .mode-tabs {
-      display: flex;
-      flex-shrink: 0;
-      background: rgba(7,13,26,0.6);
-      border-bottom: 1px solid var(--line);
+      display: grid; grid-template-columns: 1fr 1fr; gap: 4px; margin: 12px 16px 0; padding: 4px;
+      border-radius: 12px; background: var(--surface); border: 1px solid var(--line);
     }
-    .mode-tab {
-      flex: 1;
-      background: transparent;
-      border: none;
-      border-bottom: 2px solid transparent;
-      color: var(--text-soft);
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 11px;
-      font-weight: 700;
-      letter-spacing: 1px;
-      text-transform: uppercase;
-      padding: 11px 6px;
-      cursor: pointer;
-      transition: all 0.15s;
-    }
-    .mode-tab:hover { color: var(--cyan-bright); }
-    .mode-tab.active {
-      color: var(--cyan);
-      border-bottom-color: var(--cyan);
-      background: rgba(34,224,255,0.06);
-      box-shadow: 0 0 12px rgba(34,224,255,0.12) inset;
-    }
+    .mode-tab { height: 40px; border: none; border-radius: 9px; background: transparent; color: var(--muted); font-size: 14px; font-weight: 500; }
+    .mode-tab.active { background: var(--raised); color: var(--text); font-weight: 600; }
 
-    .mode-pane { flex: 1; min-height: 0; }
-    #procMode { display: flex; flex-direction: column; }
-    #talkMode { overflow-y: auto; padding: 14px; }
-    #talkMode::-webkit-scrollbar { width: 4px; }
-    #talkMode::-webkit-scrollbar-thumb { background: var(--line); border-radius: 2px; }
+    .mode-pane { flex: 1; min-height: 0; display: flex; flex-direction: column; }
 
-    .talk-disclaimer {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 10px;
-      color: var(--muted);
-      letter-spacing: 0.5px;
-      line-height: 1.5;
-      padding: 4px 4px 12px;
-      text-align: center;
+    /* ---------- HOME ---------- */
+    .home { flex: 1; min-height: 0; overflow-y: auto; padding: 16px 16px 12px; }
+    .section-label { margin: 0 0 8px; font-size: 13px; font-weight: 600; color: var(--muted); }
+    .emerg-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .emerg-tile {
+      display: flex; flex-direction: column; justify-content: space-between; align-items: flex-start;
+      height: 84px; padding: 14px; border: none; border-radius: var(--radius);
+      background: var(--danger); color: #fff; font-size: 16px; font-weight: 600; text-align: left;
     }
+    .emerg-tile svg { width: 24px; height: 24px; }
+    .emerg-tile:active { filter: brightness(1.1); }
+    .common { margin-top: 18px; }
+    .common-list { border-radius: var(--radius); background: var(--surface); border: 1px solid var(--line); overflow: hidden; }
+    .common-item {
+      display: flex; align-items: center; justify-content: space-between; width: 100%; min-height: 48px; padding: 0 16px;
+      border: none; border-bottom: 1px solid var(--line); background: transparent; font-size: 15px; text-align: left;
+    }
+    .common-item:last-child { border-bottom: none; }
+    .common-item svg { width: 18px; height: 18px; stroke: var(--muted); }
+    .common-item:active { background: var(--raised); }
 
+    /* ---------- CHAT ---------- */
+    .chat-bar { display: none; align-items: center; gap: 4px; padding: 10px 8px 6px; }
+    .chat-back { display: flex; align-items: center; gap: 4px; height: 44px; padding: 0 10px; border: none; border-radius: 10px; background: transparent; color: var(--text); font-size: 15px; font-weight: 500; }
+    .chat-back:active { background: var(--surface); }
+    .messages { display: none; flex: 1; min-height: 0; overflow-y: auto; padding: 8px 16px 16px; flex-direction: column; gap: 12px; }
+    #procMode.chatting .home { display: none; }
+    #mainApp.chatting .site-card, #mainApp.chatting .mode-tabs { display: none; }
+    .chat-site { margin-left: auto; padding-right: 8px; font-size: 13px; color: var(--muted); }
+    #procMode.chatting .chat-bar { display: flex; }
+    #procMode.chatting .messages { display: flex; }
+
+    .msg-user { align-self: flex-end; max-width: 85%; }
+    .msg-user-bubble { padding: 10px 14px; border-radius: 16px 16px 4px 16px; background: var(--raised); font-size: 15px; line-height: 1.45; }
+    .msg-time { margin-top: 4px; font-size: 11px; color: var(--muted); text-align: right; }
+
+    .card { border-radius: 16px; background: var(--surface); border: 1px solid var(--line); overflow: hidden; }
+    .card-strip { display: flex; align-items: center; gap: 8px; padding: 9px 16px; background: var(--danger); color: #fff; font-size: 13px; font-weight: 600; }
+    .card-strip svg { width: 16px; height: 16px; }
+    .card-body { padding: 14px 16px 6px; font-size: 15px; line-height: 1.5; }
+    .card-body p { margin: 0 0 10px; }
+    .card-title { margin: 0 0 10px; font-size: 18px; font-weight: 700; line-height: 1.3; }
+    .card-body ol, .card-body ul { margin: 0 0 10px; padding-left: 22px; display: flex; flex-direction: column; gap: 6px; }
+    .card-body strong { font-weight: 600; color: #fff; }
+    .tel-inline { color: #8FE3B5; font-weight: 600; text-decoration: none; white-space: nowrap; border-bottom: 1px dashed rgba(143,227,181,.5); }
+    .card-calls { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; padding: 6px 16px 14px; }
+    .call-btn {
+      display: flex; align-items: center; justify-content: center; gap: 8px; min-height: 52px; padding: 6px 10px;
+      border-radius: 12px; border: 1px solid #2E6B4A; background: #12261D; color: var(--text); text-decoration: none; text-align: center;
+    }
+    .call-btn svg { width: 18px; height: 18px; }
+    .call-btn .who { font-size: 14px; font-weight: 600; }
+    .call-btn .num { font-size: 12px; color: var(--muted); }
+    .call-btn.primary { background: var(--call); border-color: var(--call); color: #fff; font-size: 16px; font-weight: 700; }
+    .card-foot { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 8px 10px 8px 16px; border-top: 1px solid var(--line); }
+    .card-source { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--muted); }
+    .card-source svg { width: 14px; height: 14px; }
+    .card-time { font-size: 11px; color: var(--muted); }
+    .icon-btn { width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; border-radius: 10px; border: 1px solid var(--line-2); background: transparent; }
+    .card.error .card-body { color: #FFB3B6; }
+
+    .msg-system { padding: 12px 14px; border-radius: 12px; background: var(--surface-2); font-size: 14px; line-height: 1.45; }
+    .msg-system-header { font-weight: 600; margin-bottom: 4px; }
+    .msg-system p { margin: 0; color: var(--muted); }
+
+    .typing { display: flex; align-items: center; gap: 10px; color: var(--muted); font-size: 14px; }
+    .typing-dots { display: flex; gap: 4px; padding: 12px 14px; border-radius: 14px; background: var(--surface); border: 1px solid var(--line); }
+    .typing-dots span { width: 7px; height: 7px; border-radius: 50%; background: var(--muted); animation: typing 1.2s infinite; }
+    .typing-dots span:nth-child(2) { animation-delay: .2s; }
+    .typing-dots span:nth-child(3) { animation-delay: .4s; }
+    @keyframes typing { 0%, 60%, 100% { opacity: .35; transform: translateY(0); } 30% { opacity: 1; transform: translateY(-3px); } }
+
+    /* ---------- INPUT ---------- */
+    .input-area { display: flex; align-items: flex-end; gap: 10px; padding: 12px 16px calc(14px + env(safe-area-inset-bottom)); border-top: 1px solid var(--line); background: var(--bg-2); }
+    .input-wrap { flex: 1; min-width: 0; display: flex; align-items: flex-end; gap: 6px; padding: 4px 4px 4px 14px; border-radius: 16px; border: 1px solid var(--line-2); background: var(--surface); }
+    #input { flex: 1; min-width: 0; min-height: 44px; max-height: 100px; padding: 11px 0; border: none; outline: none; resize: none; background: transparent; font-size: 16px; line-height: 1.4; }
+    #input::placeholder { color: var(--muted); }
+    .send-btn { width: 44px; height: 44px; flex: none; display: flex; align-items: center; justify-content: center; border: none; border-radius: 12px; background: var(--raised); color: var(--text); }
+    .send-btn:disabled { opacity: .5; }
+    .mic-btn { width: 60px; height: 60px; flex: none; display: flex; align-items: center; justify-content: center; border: none; border-radius: 50%; background: var(--accent); color: #0B1220; }
+    .mic-btn svg { width: 26px; height: 26px; stroke-width: 2.2; }
+    .mic-btn.listening { background: var(--danger); color: #fff; animation: pulse 1.4s infinite; }
+    @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(196,47,54,.55); } 70% { box-shadow: 0 0 0 14px rgba(196,47,54,0); } 100% { box-shadow: 0 0 0 0 rgba(196,47,54,0); } }
+
+    /* ---------- TOOLBOX TALKS ---------- */
+    #talkMode { overflow-y: auto; padding: 16px; }
+    .talk-disclaimer { margin-bottom: 12px; padding: 10px 12px; border-radius: 10px; background: var(--surface-2); color: var(--muted); font-size: 13px; line-height: 1.4; }
+    #talkList { display: flex; flex-direction: column; gap: 10px; }
     .talk-card {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      width: 100%;
-      text-align: left;
-      background: rgba(13,22,38,0.7);
-      border: 1px solid var(--line);
-      border-left: 3px solid var(--cyan-dim);
-      border-radius: 8px;
-      padding: 13px 14px;
-      margin-bottom: 10px;
-      cursor: pointer;
-      transition: all 0.15s;
-      color: var(--text);
+      display: flex; align-items: center; gap: 12px; width: 100%; padding: 14px 14px 14px 16px; text-align: left;
+      border-radius: var(--radius); border: 1px solid var(--line); background: var(--surface);
     }
-    .talk-card:hover {
-      border-color: var(--cyan);
-      box-shadow: 0 0 16px rgba(34,224,255,0.18);
-    }
+    .talk-card:active { background: var(--raised); }
     .talk-card-main { flex: 1; min-width: 0; }
-    .talk-card-title {
-      font-family: 'Chakra Petch', sans-serif;
-      font-weight: 700;
-      font-size: 15px;
-      color: var(--text);
-      margin-bottom: 2px;
-    }
-    .talk-card-sub { font-size: 12px; color: var(--text-soft); }
-    .talk-tag {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 8.5px;
-      font-weight: 700;
-      letter-spacing: 0.5px;
-      text-transform: uppercase;
-      padding: 3px 7px;
-      border-radius: 3px;
-      white-space: nowrap;
-    }
-    .talk-tag.ct { color: var(--cyan); background: rgba(34,224,255,0.12); border: 1px solid rgba(34,224,255,0.4); }
-    .talk-tag.hs { color: var(--green); background: rgba(52,227,164,0.12); border: 1px solid rgba(52,227,164,0.4); }
-    .talk-card-arrow { color: var(--cyan); font-size: 20px; font-weight: 700; flex-shrink: 0; }
+    .talk-card-title { font-size: 15px; font-weight: 600; }
+    .talk-card-sub { margin-top: 3px; font-size: 13px; color: var(--muted); }
+    .talk-tag { flex: none; padding: 4px 8px; border-radius: 999px; font-size: 11px; font-weight: 600; }
+    .talk-tag.ct { background: #3A1C24; color: #FFB3B6; }
+    .talk-tag.hs { background: #13304A; color: #A9DAEE; }
+    .talk-card-arrow { color: var(--muted); font-size: 20px; }
+    .talk-back { display: inline-flex; align-items: center; height: 44px; padding: 0 10px; margin: -6px 0 6px -10px; border: none; border-radius: 10px; background: transparent; font-size: 15px; font-weight: 500; }
+    .talk-detail-head { font-size: 20px; font-weight: 700; line-height: 1.3; }
+    .talk-detail-sub { margin-top: 4px; color: var(--muted); font-size: 14px; }
+    .talk-body { margin-top: 14px; font-size: 15px; line-height: 1.55; }
+    .talk-body p { margin: 0 0 12px; }
+    .talk-body h4 { margin: 18px 0 8px; font-size: 15px; font-weight: 700; }
+    .talk-body ul { margin: 0 0 12px; padding-left: 20px; display: flex; flex-direction: column; gap: 6px; }
+    .talk-body strong { color: #fff; font-weight: 600; }
+    .talk-body .bl { margin: 16px 0 10px; padding: 12px 14px; border-radius: 12px; background: var(--surface-2); font-weight: 500; }
+    .talk-body .src { color: var(--muted); font-size: 12px; }
 
-    .talk-back {
-      background: transparent;
-      border: 1px solid var(--line);
-      color: var(--cyan);
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 11px;
-      letter-spacing: 0.5px;
-      padding: 6px 12px;
-      border-radius: 6px;
-      cursor: pointer;
-      margin-bottom: 14px;
-      transition: all 0.15s;
-    }
-    .talk-back:hover { border-color: var(--cyan); box-shadow: 0 0 12px rgba(34,224,255,0.2); }
-
-    .talk-detail-head {
-      font-family: 'Chakra Petch', sans-serif;
-      font-weight: 700;
-      font-size: 20px;
-      color: var(--text);
-      letter-spacing: 0.3px;
-    }
-    .talk-detail-sub {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 11px;
-      color: var(--cyan);
-      letter-spacing: 1px;
-      text-transform: uppercase;
-      margin: 3px 0 16px;
-    }
-
-    .talk-body { font-size: 14px; line-height: 1.6; color: var(--text); }
-    .talk-body p { margin-bottom: 11px; color: var(--text-soft); }
-    .talk-body h4 {
-      font-family: 'Chakra Petch', sans-serif;
-      font-size: 14px;
-      font-weight: 700;
-      color: var(--cyan);
-      margin: 14px 0 7px;
-      letter-spacing: 0.3px;
-    }
-    .talk-body ul { list-style: none; margin: 0 0 11px; padding: 0; }
-    .talk-body li { position: relative; padding-left: 18px; margin-bottom: 7px; color: var(--text); }
-    .talk-body li::before { content: "▸"; position: absolute; left: 0; color: var(--cyan-dim); }
-    .talk-body strong { color: var(--text); font-weight: 700; }
-    .talk-body .bl {
-      background: rgba(34,224,255,0.08);
-      border-left: 3px solid var(--cyan);
-      border-radius: 0 6px 6px 0;
-      padding: 11px 13px;
-      margin: 16px 0 12px;
-      font-weight: 600;
-      color: var(--cyan-bright);
-    }
-    .talk-body .src {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 10px;
-      color: var(--muted);
-      letter-spacing: 0.3px;
-      border-top: 1px solid var(--line-soft);
-      padding-top: 10px;
-      margin-top: 4px;
-    }
-
-    @media (max-width: 560px) {
-      .app { border-left: none; border-right: none; }
-      .corner { display: none; }
-    }
-    @media (min-width: 561px) {
-      .quick-prompts { flex-wrap: wrap; overflow-x: visible; }
-      .quick-wrap::after { display: none; }
-      .swipe-hint { display: none; }
-    }
+    @media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } }
   </style>
 </head>
 <body>
 
-<!-- ATMOSPHERE -->
-<canvas id="net"></canvas>
-<div class="glow glow-1"></div>
-<div class="glow glow-2"></div>
-<div class="grid-overlay"></div>
-<div class="scan"></div>
-<div class="vignette"></div>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 3l7 3v6c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6l7-3z"/><path d="M9 12l2 2 4-4"/></symbol>
+  <symbol id="i-globe" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/></symbol>
+  <symbol id="i-fire" viewBox="0 0 24 24"><path d="M12 3c1 3 5 5 5 10a5 5 0 0 1-10 0c0-2 1-3.5 2-4.5 0 2 1 3 2 3 0-3-1-5 1-8.5z"/></symbol>
+  <symbol id="i-siren" viewBox="0 0 24 24"><path d="M6 16v-5a6 6 0 0 1 12 0v5"/><path d="M4 16h16v3H4z"/><path d="M12 2v2M4.2 5.2l1.4 1.4M19.8 5.2l-1.4 1.4"/></symbol>
+  <symbol id="i-warn" viewBox="0 0 24 24"><path d="M12 3L2 20h20L12 3z"/><path d="M12 10v4M12 17h.01"/></symbol>
+  <symbol id="i-medical" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="4"/><path d="M12 8v8M8 12h8"/></symbol>
+  <symbol id="i-chev" viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></symbol>
+  <symbol id="i-back" viewBox="0 0 24 24"><path d="M15 6l-6 6 6 6"/></symbol>
+  <symbol id="i-mic" viewBox="0 0 24 24"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></symbol>
+  <symbol id="i-send" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></symbol>
+  <symbol id="i-phone" viewBox="0 0 24 24"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2z"/></symbol>
+  <symbol id="i-doc" viewBox="0 0 24 24"><path d="M6 3h9l4 4v14H6z"/><path d="M14 3v5h5"/></symbol>
+  <symbol id="i-speak" viewBox="0 0 24 24"><path d="M4 9v6h4l5 4V5L8 9H4z"/><path d="M16.5 8.5a5 5 0 0 1 0 7"/></symbol>
+  <symbol id="i-del" viewBox="0 0 24 24"><path d="M9 5h11v14H9l-6-7 6-7z"/><path d="M12 9l5 6M17 9l-5 6"/></symbol>
+</svg>
 
 <!-- PIN SCREEN -->
 <div class="pin-screen" id="pinScreen">
-  <div class="pin-card">
-    <span class="corner tl"></span><span class="corner tr"></span>
-    <span class="corner bl"></span><span class="corner br"></span>
-    <div class="pin-logo">Site<span>IQ</span></div>
-    <div class="pin-subtitle">Authorised Personnel Only</div>
-    <div class="pin-label">Enter PIN</div>
-    <div class="pin-dots">
-      <div class="pin-dot" id="dot0"></div>
-      <div class="pin-dot" id="dot1"></div>
-      <div class="pin-dot" id="dot2"></div>
-      <div class="pin-dot" id="dot3"></div>
-    </div>
-    <div class="pin-keypad">
-      <button class="pin-key" onclick="pinKey('1')">1</button>
-      <button class="pin-key" onclick="pinKey('2')">2</button>
-      <button class="pin-key" onclick="pinKey('3')">3</button>
-      <button class="pin-key" onclick="pinKey('4')">4</button>
-      <button class="pin-key" onclick="pinKey('5')">5</button>
-      <button class="pin-key" onclick="pinKey('6')">6</button>
-      <button class="pin-key" onclick="pinKey('7')">7</button>
-      <button class="pin-key" onclick="pinKey('8')">8</button>
-      <button class="pin-key" onclick="pinKey('9')">9</button>
-      <button class="pin-key empty"></button>
-      <button class="pin-key" onclick="pinKey('0')">0</button>
-      <button class="pin-key delete" onclick="pinDelete()">⌫</button>
-    </div>
-    <div class="pin-error" id="pinError"></div>
+  <div class="pin-logo">
+    <svg class="i"><use href="#i-shield"/></svg>
+    <div class="name">SiteIQ</div>
   </div>
-  <div class="pin-site-info">
-    Hartfield Building Society — Hartfield House<br>
-    SiteIQ Security Ltd — HBS-AI-2026-001
+  <div class="pin-site">Hartfield House</div>
+  <div class="pin-label" id="pinLabel">Enter the site PIN</div>
+  <div class="pin-dots" aria-hidden="true">
+    <div class="pin-dot" id="dot0"></div>
+    <div class="pin-dot" id="dot1"></div>
+    <div class="pin-dot" id="dot2"></div>
+    <div class="pin-dot" id="dot3"></div>
   </div>
+  <div class="pin-keypad" role="group" aria-labelledby="pinLabel">
+    <button class="pin-key" onclick="pinKey('1')">1</button>
+    <button class="pin-key" onclick="pinKey('2')">2</button>
+    <button class="pin-key" onclick="pinKey('3')">3</button>
+    <button class="pin-key" onclick="pinKey('4')">4</button>
+    <button class="pin-key" onclick="pinKey('5')">5</button>
+    <button class="pin-key" onclick="pinKey('6')">6</button>
+    <button class="pin-key" onclick="pinKey('7')">7</button>
+    <button class="pin-key" onclick="pinKey('8')">8</button>
+    <button class="pin-key" onclick="pinKey('9')">9</button>
+    <span class="pin-key empty"></span>
+    <button class="pin-key" onclick="pinKey('0')">0</button>
+    <button class="pin-key delete" onclick="pinDelete()" aria-label="Delete"><svg class="i"><use href="#i-del"/></svg></button>
+  </div>
+  <div class="pin-error" id="pinError" role="alert"></div>
+  <div class="pin-footer">For authorised security staff on this site</div>
 </div>
 
 <div class="app" id="mainApp" style="display:none;">
-  <span class="corner tl"></span><span class="corner tr"></span>
-  <span class="corner bl"></span><span class="corner br"></span>
 
-  <!-- HEADER -->
-  <div class="header">
-    <div class="header-top">
-      <div class="logo-area">
-        <div class="siteiq-badge">SiteIQ</div>
-        <div class="site-iq-name">Site<span>IQ</span></div>
-      </div>
-      <div class="status-area">
-        <span class="lang-wrap">
-          <button class="lang-btn" id="langBtn" onclick="toggleLangMenu(event)" aria-label="Choose language">
-            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.6 2.7 2.6 15.3 0 18M12 3c-2.6 2.7-2.6 15.3 0 18"/></svg>
-            <span id="langCode">EN</span><span class="caret">▼</span>
-          </button>
-          <div class="lang-menu" id="langMenu"></div>
-        </span>
-        <span class="clock" id="clock">--:--</span>
-        <span class="status-pill"><span class="status-dot"></span>ONLINE</span>
-      </div>
+  <header class="header">
+    <div class="logo"><svg class="i"><use href="#i-shield"/></svg>SiteIQ</div>
+    <div class="status-area">
+      <span class="lang-wrap">
+        <button class="lang-btn" id="langBtn" onclick="toggleLangMenu(event)" aria-label="Choose language">
+          <svg class="i"><use href="#i-globe"/></svg><span id="langCode">EN</span>
+        </button>
+        <div class="lang-menu" id="langMenu"></div>
+      </span>
+      <span class="status-pill"><span class="status-dot"></span>Online</span>
     </div>
-    <div class="header-site">
-      <div class="header-site-name">Hartfield Building Society — Hartfield House</div>
-      <div class="header-site-ref">14 Ashford Row, Birmingham B3 9ZZ &nbsp;|&nbsp; REF: HBS-AI-2026-001</div>
-    </div>
+  </header>
+
+  <div class="site-card">
+    <div class="site-name">Hartfield House</div>
+    <div class="site-sub">Hartfield Building Society · 14 Ashford Row, Birmingham</div>
+    <div class="site-ver">Assignment Instructions v3.2 · updated 1 Jan 2026</div>
   </div>
 
-  <!-- MODE TABS -->
-  <div class="mode-tabs">
-    <button id="tabProc" class="mode-tab active" onclick="setMode('proc')">Site Procedures</button>
-    <button id="tabTalk" class="mode-tab" onclick="setMode('talk')">Toolbox Talks</button>
+  <div class="mode-tabs" role="tablist">
+    <button id="tabProc" class="mode-tab active" role="tab" onclick="setMode('proc')">Site procedures</button>
+    <button id="tabTalk" class="mode-tab" role="tab" onclick="setMode('talk')">Toolbox talks</button>
   </div>
 
-  <!-- SITE PROCEDURES MODE (existing chat) -->
+  <!-- SITE PROCEDURES -->
   <div id="procMode" class="mode-pane">
-
-  <!-- QUICK PROMPTS -->
-  <div class="quick-wrap">
-    <div class="quick-prompts">
-      <button class="quick-btn alarm" onclick="sendQuick('What do I do if the fire alarm activates?')">Fire Alarm</button>
-      <button class="quick-btn" onclick="sendQuick('A staff member has forgotten their pass. What is the procedure?')">Forgotten Pass</button>
-      <button class="quick-btn alarm" onclick="sendQuick('The intruder alarm has activated on night shift. What do I do?')">Intruder Alarm</button>
-      <button class="quick-btn" onclick="sendQuick('How do I issue a visitor pass?')">Visitor Pass</button>
-      <button class="quick-btn" onclick="sendQuick('A delivery has arrived. What is the procedure?')">Delivery</button>
-      <button class="quick-btn" onclick="sendQuick('Who are the keyholders and what are their contact numbers?')">Keyholders</button>
-      <button class="quick-btn" onclick="sendQuick('What are my opening procedures at 07:00?')">Opening Up</button>
-      <button class="quick-btn alarm" onclick="sendQuick('What is the bomb threat procedure?')">Bomb Threat</button>
+    <div class="home">
+      <h2 class="section-label">Emergencies</h2>
+      <div class="emerg-grid">
+        <button class="emerg-tile" onclick="sendQuick('What do I do if the fire alarm activates?')"><svg class="i"><use href="#i-fire"/></svg>Fire alarm</button>
+        <button class="emerg-tile" onclick="sendQuick('The intruder alarm has activated on night shift. What do I do?')"><svg class="i"><use href="#i-siren"/></svg>Intruder alarm</button>
+        <button class="emerg-tile" onclick="sendQuick('What is the bomb threat procedure?')"><svg class="i"><use href="#i-warn"/></svg>Bomb threat</button>
+        <button class="emerg-tile" onclick="sendQuick('Someone has collapsed or is injured. What is the medical emergency procedure?')"><svg class="i"><use href="#i-medical"/></svg>Medical</button>
+      </div>
+      <div class="common">
+        <h2 class="section-label">Common questions</h2>
+        <div class="common-list">
+          <button class="common-item" onclick="sendQuick('A staff member has forgotten their pass. What is the procedure?')">Someone has forgotten their pass<svg class="i"><use href="#i-chev"/></svg></button>
+          <button class="common-item" onclick="sendQuick('How do I issue a visitor pass?')">Signing in a visitor<svg class="i"><use href="#i-chev"/></svg></button>
+          <button class="common-item" onclick="sendQuick('A delivery has arrived. What is the procedure?')">A delivery has arrived<svg class="i"><use href="#i-chev"/></svg></button>
+          <button class="common-item" onclick="sendQuick('Who are the keyholders and what are their contact numbers?')">Who are the keyholders?<svg class="i"><use href="#i-chev"/></svg></button>
+          <button class="common-item" onclick="sendQuick('What are my opening procedures at 07:00?')">Opening up at 07:00<svg class="i"><use href="#i-chev"/></svg></button>
+        </div>
+      </div>
     </div>
-    <span class="swipe-hint">›</span>
+
+    <div class="chat-bar">
+      <button class="chat-back" onclick="goHome()"><svg class="i"><use href="#i-back"/></svg>Home</button>
+      <span class="chat-site">Hartfield House</span>
+    </div>
+    <div class="messages" id="messages" aria-live="polite"></div>
+
+    <div class="input-area">
+      <div class="input-wrap">
+        <label for="input" class="sr-only">Ask SiteIQ</label>
+        <textarea id="input" placeholder="Ask about this site…" rows="1" onkeydown="handleKey(event)" oninput="autoResize(this)"></textarea>
+        <button class="send-btn" id="sendBtn" onclick="sendMessage()" aria-label="Send"><svg class="i"><use href="#i-send"/></svg></button>
+      </div>
+      <button class="mic-btn" id="micBtn" onclick="toggleVoice()" aria-label="Speak your question" title="Speak your question"><svg class="i"><use href="#i-mic"/></svg></button>
+    </div>
   </div>
 
-  <!-- MESSAGES -->
-  <div class="messages" id="messages">
-    <div class="msg-system">
-      <div class="msg-system-header">SiteIQ — Ready</div>
-      <p>Good day, Officer. I have full knowledge of the Hartfield Building Society Assignment Instructions (HBS-AI-2026-001). Ask me anything about procedures, emergency protocols, contacts, or access control. I only answer from verified site documentation.</p>
-    </div>
-  </div>
-
-  <!-- INPUT -->
-  <div class="input-area">
-    <div class="input-wrap">
-      <textarea
-        id="input"
-        placeholder="Ask about site procedures, contacts, emergencies..."
-        rows="1"
-        onkeydown="handleKey(event)"
-        oninput="autoResize(this)"
-      ></textarea>
-    </div>
-    <button class="mic-btn" id="micBtn" onclick="toggleVoice()" title="Voice input">
-      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-        <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/>
-        <path d="M19 10v2a7 7 0 0 1-14 0v-2"/>
-        <line x1="12" y1="19" x2="12" y2="23" stroke="currentColor" stroke-width="2" fill="none"/>
-        <line x1="8" y1="23" x2="16" y2="23" stroke="currentColor" stroke-width="2" fill="none"/>
-      </svg>
-    </button>
-    <button class="send-btn" id="sendBtn" onclick="sendMessage()">
-      <svg viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
-    </button>
-  </div>
-  </div><!-- end #procMode -->
-
-  <!-- TOOLBOX TALKS MODE -->
+  <!-- TOOLBOX TALKS -->
   <div id="talkMode" class="mode-pane" style="display:none;">
-    <div class="talk-disclaimer">Reinforces official training &amp; site procedures — not a replacement. Read-only refresher.</div>
+    <div class="talk-disclaimer">A quick refresher that backs up your official training and site procedures. It doesn't replace them.</div>
     <div id="talkList"></div>
     <div id="talkDetail" style="display:none;"></div>
   </div>
 
-  <div class="footer-note">RESTRICTED — AUTHORISED SECURITY PERSONNEL ONLY — SiteIQ Security Ltd</div>
-
 </div>
 
-<!-- ATMOSPHERE FX + CLOCK (presentation only) -->
-<script>
-(function () {
-  // Live clock
-  function tick() {
-    var el = document.getElementById('clock');
-    if (el) {
-      el.textContent = new Date().toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
-    }
-  }
-  tick();
-  setInterval(tick, 1000);
 
-  // Particle network background
-  var canvas = document.getElementById('net');
-  if (!canvas || !canvas.getContext) return;
-  var ctx = canvas.getContext('2d');
-  var w, h, dpr, points = [];
-  var COUNT = 46, LINK = 130;
-
-  function resize() {
-    dpr = Math.min(window.devicePixelRatio || 1, 2);
-    w = window.innerWidth; h = window.innerHeight;
-    canvas.width = w * dpr; canvas.height = h * dpr;
-    canvas.style.width = w + 'px'; canvas.style.height = h + 'px';
-    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    var target = Math.min(COUNT, Math.round(w * h / 26000));
-    points = [];
-    for (var i = 0; i < target; i++) {
-      points.push({
-        x: Math.random() * w,
-        y: Math.random() * h,
-        vx: (Math.random() - 0.5) * 0.25,
-        vy: (Math.random() - 0.5) * 0.25
-      });
-    }
-  }
-
-  function frame() {
-    ctx.clearRect(0, 0, w, h);
-    for (var i = 0; i < points.length; i++) {
-      var p = points[i];
-      p.x += p.vx; p.y += p.vy;
-      if (p.x < 0 || p.x > w) p.vx *= -1;
-      if (p.y < 0 || p.y > h) p.vy *= -1;
-    }
-    for (var a = 0; a < points.length; a++) {
-      for (var b = a + 1; b < points.length; b++) {
-        var dx = points[a].x - points[b].x, dy = points[a].y - points[b].y;
-        var dist = Math.sqrt(dx * dx + dy * dy);
-        if (dist < LINK) {
-          ctx.strokeStyle = 'rgba(34,224,255,' + (0.10 * (1 - dist / LINK)) + ')';
-          ctx.lineWidth = 1;
-          ctx.beginPath();
-          ctx.moveTo(points[a].x, points[a].y);
-          ctx.lineTo(points[b].x, points[b].y);
-          ctx.stroke();
-        }
-      }
-    }
-    for (var j = 0; j < points.length; j++) {
-      ctx.fillStyle = 'rgba(34,224,255,0.55)';
-      ctx.beginPath();
-      ctx.arc(points[j].x, points[j].y, 1.4, 0, Math.PI * 2);
-      ctx.fill();
-    }
-    requestAnimationFrame(frame);
-  }
-
-  window.addEventListener('resize', resize);
-  resize();
-  requestAnimationFrame(frame);
-})();
-</script>
 
 <script>
 
@@ -1271,16 +464,19 @@ function sendQuick(text) {
 function appendMessage(html) {
   const messages = document.getElementById('messages');
   const div = document.createElement('div');
-  div.innerHTML = html;
-  messages.appendChild(div.firstElementChild);
-  messages.scrollTop = messages.scrollHeight;
+  div.innerHTML = html.trim();
+  const el = div.firstElementChild;
+  messages.appendChild(el);
+  // Answers scroll so their heading is in view; everything else scrolls to the bottom
+  if (el.classList.contains('card')) messages.scrollTop = el.offsetTop - messages.offsetTop - 8;
+  else messages.scrollTop = messages.scrollHeight;
 }
 
 function showTyping() {
   const messages = document.getElementById('messages');
   const div = document.createElement('div');
   div.id = 'typing-indicator';
-  div.innerHTML = `<div class="typing"><div class="typing-dots"><span></span><span></span><span></span></div><div class="typing-label">SiteIQ is thinking...</div></div>`;
+  div.innerHTML = '<div class="typing"><div class="typing-dots"><span></span><span></span><span></span></div>Checking the instructions…</div>';
   messages.appendChild(div);
   messages.scrollTop = messages.scrollHeight;
 }
@@ -1290,12 +486,94 @@ function removeTyping() {
   if (el) el.remove();
 }
 
-function formatResponse(text) {
-  text = text.replace(/\b(0\d{3,4}[\s-]?\d{3,4}[\s-]?\d{3,4})\b/g, '<span class="phone-number">$1</span>');
-  text = text.replace(/^#{1,6}\s*(.+?)\s*$/gm, '<span class="msg-ai-title">$1</span>');
-  text = text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
-  text = text.replace(/\n/g, '<br>');
-  return text;
+function escapeHtml(t) {
+  return String(t).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+}
+
+const EMERGENCY_WORDS = /fire|intruder|bomb|medical|collapse|injur|evacuat|suspicious|threat|999/i;
+const PHONE_RE = /\b(0\d{2,4}[\s-]?\d{3,4}[\s-]?\d{3,4}|999|105)\b/g;
+const spokenReplies = [];
+
+// Turns SiteIQ's reply into an answer card: heading, steps, tap-to-call buttons and the source section
+function buildCard(reply, question) {
+  let text = reply.trim();
+  let source = '';
+  text = text.replace(/^\s*SOURCE:\s*(.+?)\s*$/im, function (_, s) { source = s; return ''; }).trim();
+
+  const lines = text.split(/\n/);
+  let title = '';
+  let html = '';
+  let list = null;
+  const close = () => { if (list) { html += '</' + list + '>'; list = null; } };
+  const inline = (t) => escapeHtml(t)
+    .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+    .replace(PHONE_RE, (n) => '<a class="tel-inline" href="tel:' + n.replace(/\D/g, '') + '">' + n + '</a>');
+
+  lines.forEach(function (raw) {
+    const line = raw.trim();
+    if (!line) { close(); return; }
+    let m;
+    if ((m = line.match(/^#{1,6}\s*(.+)$/))) {
+      close();
+      if (!title && !html) title = m[1].replace(/\*\*/g, '');
+      else html += '<p><strong>' + inline(m[1].replace(/\*\*/g, '')) + '</strong></p>';
+    } else if ((m = line.match(/^\d+[.)]\s+(.+)$/))) {
+      if (list !== 'ol') { close(); html += '<ol>'; list = 'ol'; }
+      html += '<li>' + inline(m[1]) + '</li>';
+    } else if ((m = line.match(/^[-•*]\s+(.+)$/))) {
+      if (list !== 'ul') { close(); html += '<ul>'; list = 'ul'; }
+      html += '<li>' + inline(m[1]) + '</li>';
+    } else {
+      close();
+      html += '<p>' + inline(line) + '</p>';
+    }
+  });
+  close();
+
+  // Call buttons: 999 first, then up to two named contacts found in the reply
+  const calls = [];
+  const seen = {};
+  if (/\b999\b/.test(text)) { calls.push({ primary: true, num: '999' }); seen['999'] = 1; }
+  text.split(/\n/).forEach(function (line) {
+    const re = /\b(0\d{2,4}[\s-]?\d{3,4}[\s-]?\d{3,4})\b/g;
+    let m;
+    while ((m = re.exec(line))) {
+      const digits = m[1].replace(/\D/g, '');
+      if (seen[digits] || calls.length >= 3) continue;
+      seen[digits] = 1;
+      const before = line.slice(0, m.index).replace(/\*\*/g, '').replace(/^[-•*\d.)\s]+/, '');
+      const name = (before.match(/([A-Z][A-Za-z'’]+(?:\s[A-Z][A-Za-z'’]+)?)\s*(?:\([^)]*\))?\s*[-–—:]?\s*$/) || [])[1];
+      calls.push({ who: name || 'Call', num: m[1] });
+    }
+  });
+  const callHtml = calls.length ? '<div class="card-calls">' + calls.map(function (c) {
+    const href = 'tel:' + c.num.replace(/\D/g, '');
+    return c.primary
+      ? '<a class="call-btn primary" href="' + href + '"><svg class="i"><use href="#i-phone"/></svg>Call 999</a>'
+      : '<a class="call-btn" href="' + href + '"><svg class="i"><use href="#i-phone"/></svg><span><span class="who">' + escapeHtml(c.who) + '</span><br><span class="num">' + c.num + '</span></span></a>';
+  }).join('') + '</div>' : '';
+
+  const urgent = EMERGENCY_WORDS.test(question) || EMERGENCY_WORDS.test(title);
+  const idx = spokenReplies.push(text) - 1;
+  const showSource = source && !/^none$/i.test(source);
+  return '<article class="card">' +
+    (urgent ? '<div class="card-strip"><svg class="i"><use href="#i-warn"/></svg>Emergency procedure</div>' : '') +
+    // In an emergency the call buttons sit straight under the heading, so they're on screen at once
+    (urgent
+      ? '<div class="card-body">' + (title ? '<h3 class="card-title">' + inline(title) + '</h3>' : '') + '</div>' + callHtml + '<div class="card-body">' + html + '</div>'
+      : '<div class="card-body">' + (title ? '<h3 class="card-title">' + inline(title) + '</h3>' : '') + html + '</div>' + callHtml) +
+    '<div class="card-foot">' +
+      (showSource ? '<span class="card-source"><svg class="i"><use href="#i-doc"/></svg>From ' + escapeHtml(source) + '</span>' : '<span class="card-time">' + getTime() + '</span>') +
+      '<button class="icon-btn" onclick="speakResponse(spokenReplies[' + idx + '])" aria-label="Read aloud"><svg class="i"><use href="#i-speak"/></svg></button>' +
+    '</div></article>';
+}
+
+function goHome() {
+  if (window.speechSynthesis) window.speechSynthesis.cancel();
+  conversationHistory = [];
+  document.getElementById('messages').innerHTML = '';
+  document.getElementById('procMode').classList.remove('chatting');
+  document.getElementById('mainApp').classList.remove('chatting');
 }
 
 async function sendMessage() {
@@ -1308,10 +586,12 @@ async function sendMessage() {
   input.style.height = 'auto';
   const time = getTime();
 
+  document.getElementById('procMode').classList.add('chatting');
+  document.getElementById('mainApp').classList.add('chatting');
   appendMessage(`
     <div class="msg-user">
-      <div class="msg-user-bubble">${text.replace(/</g, '&lt;')}</div>
-      <div class="msg-user-time">${time}</div>
+      <div class="msg-user-bubble">${escapeHtml(text)}</div>
+      <div class="msg-time">${time}</div>
     </div>`);
 
   conversationHistory.push({ role: 'user', content: text });
@@ -1332,24 +612,20 @@ async function sendMessage() {
     const reply = data.content[0].text;
     conversationHistory.push({ role: 'assistant', content: reply });
     removeTyping();
-    if (voiceMode) { speakResponse(reply); }
-
-    appendMessage(`
-      <div class="msg-ai">
-        <div class="msg-ai-header"><div class="msg-ai-badge">SiteIQ</div></div>
-        <div class="msg-ai-bubble">${formatResponse(reply)}</div>
-        <div class="msg-ai-time">${getTime()}</div>
-      </div>`);
+    appendMessage(buildCard(reply, text));
+    if (voiceMode) { speakResponse(spokenReplies[spokenReplies.length - 1]); }
 
   } catch (err) {
     removeTyping();
+    conversationHistory.pop();
     appendMessage(`
-      <div class="msg-ai">
-        <div class="msg-ai-header"><div class="msg-ai-badge">SiteIQ</div></div>
-        <div class="msg-ai-bubble" style="border-left: 3px solid #d32f2f; color: #d32f2f;">
-          Connection error. For emergencies contact Site Manager: Barry Bonds — 07700 900 102
+      <article class="card error">
+        <div class="card-body"><p>SiteIQ can't connect right now. In an emergency, call 999. For anything else, call the Site Manager.</p></div>
+        <div class="card-calls">
+          <a class="call-btn primary" href="tel:999"><svg class="i"><use href="#i-phone"/></svg>Call 999</a>
+          <a class="call-btn" href="tel:07700900102"><svg class="i"><use href="#i-phone"/></svg><span><span class="who">Site Manager</span><br><span class="num">07700 900 102</span></span></a>
         </div>
-      </div>`);
+      </article>`);
   }
 
   isLoading = false;
@@ -1371,6 +647,7 @@ function speakResponse(text) {
   // Clean the text for speech
   const clean = text
     .replace(/\*\*(.*?)\*\*/g, '$1')
+    .replace(/^\s*SOURCE:.*$/gim, '')
     .replace(/^#{1,6}\s*/gm, '')
     .replace(/[#*_`>]/g, '')
     .replace(/\n+/g, '. ')
@@ -1465,7 +742,7 @@ function startListening() {
     const micBtn = document.getElementById('micBtn');
     micBtn.classList.add('listening');
     micBtn.title = 'Listening — tap to stop';
-    document.getElementById('input').placeholder = 'Listening...';
+    document.getElementById('input').placeholder = 'Listening…';
   } catch(e) {
     stopListening();
   }
@@ -1475,8 +752,8 @@ function stopListening() {
   isListening = false;
   const micBtn = document.getElementById('micBtn');
   micBtn.classList.remove('listening');
-  micBtn.title = 'Voice input';
-  document.getElementById('input').placeholder = 'Ask about site procedures, contacts, emergencies...';
+  micBtn.title = 'Speak your question';
+  document.getElementById('input').placeholder = 'Ask about this site…';
   if (recognition) {
     try { recognition.stop(); } catch(e) {}
   }
