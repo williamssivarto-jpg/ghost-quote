@@ -179,6 +179,7 @@
     .call-btn .who { font-size: 14px; font-weight: 600; }
     .call-btn .num { font-size: 12px; color: var(--muted); }
     .call-btn.primary { background: var(--call); border-color: var(--call); color: #fff; font-size: 16px; font-weight: 700; }
+    .call-btn.primary .num { color: rgba(255,255,255,.85); }
     .card-foot { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 8px 10px 8px 16px; border-top: 1px solid var(--line); }
     .card-source { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--muted); }
     .card-source svg { width: 14px; height: 14px; }
@@ -531,27 +532,33 @@ function buildCard(reply, question) {
   });
   close();
 
-  // Call buttons: 999 first, then up to two named contacts found in the reply
+  // Call buttons follow the order the procedure gives them, so the first step's number comes first.
+  // 999 only gets a button where the procedure puts it among the first calls to make.
   const calls = [];
   const seen = {};
-  if (/\b999\b/.test(text)) { calls.push({ primary: true, num: '999' }); seen['999'] = 1; }
   text.split(/\n/).forEach(function (line) {
-    const re = /\b(0\d{2,4}[\s-]?\d{3,4}[\s-]?\d{3,4})\b/g;
+    const re = /\b(0\d{2,4}[\s-]?\d{3,4}[\s-]?\d{3,4}|999)\b/g;
     let m;
     while ((m = re.exec(line))) {
       const digits = m[1].replace(/\D/g, '');
       if (seen[digits] || calls.length >= 3) continue;
       seen[digits] = 1;
-      const before = line.slice(0, m.index).replace(/\*\*/g, '').replace(/^[-•*\d.)\s]+/, '');
-      const name = (before.match(/([A-Z][A-Za-z'’]+(?:\s[A-Z][A-Za-z'’]+)?)\s*(?:\([^)]*\))?\s*[-–—:]?\s*$/) || [])[1];
-      calls.push({ who: name || 'Call', num: m[1] });
+      if (digits === '999') { calls.push({ who: 'Call 999', num: '999', is999: true }); continue; }
+      const before = line.slice(0, m.index).replace(/\*\*/g, '').replace(/^[-•*\d.)\s]+/, '').trim();
+      let who = (before.match(/([A-Z][A-Za-z'’]+(?:\s[A-Z][A-Za-z'’]+)?)\s*(?:\([^)]*\))?\s*[-–—:]?\s*$/) || [])[1];
+      if (!who) {
+        const phrase = (before.match(/call\s+(?:the\s+)?([A-Za-z][A-Za-z\s]+?)(?:\s+(?:immediately|now|straight away|on))?\s*[:\-–—]?\s*$/i) || [])[1];
+        if (phrase) who = phrase.charAt(0).toUpperCase() + phrase.slice(1);
+      }
+      calls.push({ who: who || 'Call', num: m[1] });
     }
   });
-  const callHtml = calls.length ? '<div class="card-calls">' + calls.map(function (c) {
+  const callHtml = calls.length ? '<div class="card-calls">' + calls.map(function (c, i) {
     const href = 'tel:' + c.num.replace(/\D/g, '');
-    return c.primary
-      ? '<a class="call-btn primary" href="' + href + '"><svg class="i"><use href="#i-phone"/></svg>Call 999</a>'
-      : '<a class="call-btn" href="' + href + '"><svg class="i"><use href="#i-phone"/></svg><span><span class="who">' + escapeHtml(c.who) + '</span><br><span class="num">' + c.num + '</span></span></a>';
+    const cls = 'call-btn' + (i === 0 ? ' primary' : '');
+    return c.is999
+      ? '<a class="' + cls + '" href="' + href + '"><svg class="i"><use href="#i-phone"/></svg>Call 999</a>'
+      : '<a class="' + cls + '" href="' + href + '"><svg class="i"><use href="#i-phone"/></svg><span><span class="who">' + escapeHtml(c.who) + '</span><br><span class="num">' + c.num + '</span></span></a>';
   }).join('') + '</div>' : '';
 
   const urgent = EMERGENCY_WORDS.test(question) || EMERGENCY_WORDS.test(title);
